@@ -19,6 +19,8 @@ if (!function_exists("add_action")) return;
     let media_url = "<?php xp_subdomain::e("media_url") ?>";
     // add vue app
     let vue = await import(media_url + '/vue.esm-browser.prod.js');
+    let ds = await import(media_url + '/xp-datastore.js');    
+    let mixins = [ds.default]; // warning: must add .default
 
     let created = function ()
     {
@@ -64,6 +66,7 @@ if (!function_exists("add_action")) return;
 
     let app = vue.createApp({
         template: '#appTemplate',
+        mixins,
         data: () => data,
         methods,
         created,
