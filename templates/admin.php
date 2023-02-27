@@ -6,20 +6,69 @@ if (!function_exists("add_action")) return;
 
 ?>
 <div id="app">
-    <h3>XP Sub-Domains</h3>
-    <p>{{ message }}</p>
 </div>
-
+<template id="appTemplate" data-compos="test options">
+    <div>
+        <h3>XP Sub-Domains</h3>
+        <xp-options></xp-options>
+        <xp-test></xp-test>
+        <p>{{ message }}</p>
+    </div>
+</template>
 <script type="module">
     let media_url = "<?php xp_subdomain::e("media_url") ?>";
     // add vue app
     let vue = await import(media_url + '/vue.esm-browser.prod.js');
 
-    vue.createApp({
-        data() {
-            return {
-                message: 'Hello Vue!'
+    let created = function ()
+    {
+        console.log("created");
+        // register components
+        this.load_components(app);
+
+        // add resize event listener
+        window.addEventListener('resize', () => {
+            this.window_w = window.innerWidth;
+            this.window_h = window.innerHeight;
+            this.message = '' + this.window_w + 'x' + this.window_h;
+        })
+    }
+
+    let data = {
+        window_w: window.innerWidth,
+        window_h: window.innerHeight,
+        message: 'Hello Vue!'
+    }
+
+    let methods = {
+        load_components (app) {
+            // WARNING: REGISTER ASYNC COMPONENTS FIRST
+            // <template id="appTemplate" data-compos="test">
+            let appTemplate = document.querySelector('#appTemplate');
+            let compos = appTemplate?.getAttribute("data-compos");
+            if (compos) {
+                console.log('compos: ' + compos);
+                compos = compos.split(' ');
+                compos.forEach(function(name) {
+                    console.log('register async component: ' + name);
+                    app.component(
+                        'xp-' + name,
+                        vue.defineAsyncComponent(() => import(media_url + `/xp-${name}.js`))
+                    );
+                });
             }
-        }
-    }).mount('#app')
+
+        },
+
+    }
+
+    let app = vue.createApp({
+        template: '#appTemplate',
+        data: () => data,
+        methods,
+        created,
+    });
+    // hack: need app to be available in created()
+    app.mount('#app')
+
 </script>

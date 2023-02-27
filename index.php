@@ -20,6 +20,22 @@ class xp_subdomain
 
         // store the plugin dir
         static::v("plugin_dir", __DIR__);
+
+        // store the plugin data dir
+        $data_dir = dirname(__DIR__) . "/xp-data";
+        static::v("plugin_data_dir", $data_dir);
+        // create the data dir if it does not exist
+        if (!is_dir($data_dir)) {
+            mkdir($data_dir, 0777, true);
+            // add index.php to prevent directory listing
+            $index = "$data_dir/index.php";
+            if (!is_file($index)) {
+                $secret  = md5(password_hash(uniqid(), PASSWORD_DEFAULT));
+                $code = '<?php $secret = "' . $secret . '";';
+                file_put_contents($index, $code);
+            }
+        }
+
         // store the plugin templates dir
         static::v("plugin_templates_dir", __DIR__ . "/templates");
 
