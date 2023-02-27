@@ -29,11 +29,8 @@ if (!function_exists("add_action")) return;
         this.load_components(app);
 
         // add resize event listener
-        window.addEventListener('resize', () => {
-            this.window_w = window.innerWidth;
-            this.window_h = window.innerHeight;
-            this.message = '' + this.window_w + 'x' + this.window_h;
-        })
+        this.act_resize();
+        window.addEventListener('resize', this.act_resize);
     }
 
     let data = {
@@ -43,6 +40,11 @@ if (!function_exists("add_action")) return;
     }
 
     let methods = {
+        act_resize() {
+            this.window_w = window.innerWidth;
+            this.window_h = window.innerHeight;
+            this.message = '' + this.window_w + 'x' + this.window_h;
+        },
         load_components (app) {
             // WARNING: REGISTER ASYNC COMPONENTS FIRST
             // <template id="appTemplate" data-compos="test">

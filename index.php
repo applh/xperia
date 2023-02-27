@@ -93,6 +93,15 @@ class xp_subdomain
         if (is_admin()) {
             add_action("admin_menu", "$class::admin_init");
         }
+
+        // AJAX
+        // add new ajax action (not logged in) action="xpsubdomain"
+        // warning: POST request only
+        // curl -v -X POST -d "action=xpsubdomain" https://YOUSITE.COM/wp-admin/admin-ajax.php -o ajax.json
+        add_action("wp_ajax_nopriv_xpsubdomain", "$class::api_json");
+        // also needed if user logged in
+        add_action("wp_ajax_xpsubdomain", "$class::api_json");
+
     }
 
     static function init()
@@ -117,7 +126,7 @@ class xp_subdomain
     static function robots_txt($output, $public)
     {
         $output =
-            <<<txt
+        <<<txt
         User-agent: *
         Disallow: /
         txt;
@@ -174,6 +183,28 @@ class xp_subdomain
         if (is_file($admin)) {
             include $admin;
         }
+    }
+
+    static function api_json ()
+    {
+        // return json
+        $infos = [];
+        // time
+        $infos['time'] = time();
+        // date
+        $infos['date'] = date("Y-m-d H:i:s");
+        // request
+        $infos['request'] = $_REQUEST;
+        // files
+        $infos['files'] = $_FILES;
+
+        // check callback
+        if (function_exists("wp_send_json")) {
+            // debug header
+            // header("X-Xpress-debug: wp_json_send");
+            wp_send_json($infos, 200); //use wp_json_send to return some data to the client.
+            wp_die(); //use wp_die() once you have completed your execution.
+        }        
     }
 }
 
