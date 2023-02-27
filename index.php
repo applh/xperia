@@ -112,8 +112,18 @@ class xp_subdomain
         static::v("host", $host);
 
         header("xp-sub-host: $host");
+        $subdomains = get_option("xp_subdomain", []);
+        if (!is_array($subdomains)) {
+            $subdomains = [];
+        }
+        else {
+            // extract the subdomains names
+            $subdomains = array_map(function($subdomain) {
+                return $subdomain["name"] ?? "";
+            }, $subdomains);
+        }
 
-        if (in_array($host, ["wp2.applh.com", "wp3.applh.com"])) {
+        if (in_array($host, $subdomains)) {
             if (!is_admin()) {
                 // https://developer.wordpress.org/reference/hooks/robots_txt/
                 add_filter('robots_txt', "$class::robots_txt", 99, 2);
@@ -197,6 +207,20 @@ class xp_subdomain
         $infos['request'] = $_REQUEST;
         // files
         $infos['files'] = $_FILES;
+
+        // process the request
+        // if user is admin
+        if (current_user_can("edit_plugins")) {
+            $c = "xpi_admin";
+            $m = "subdomains";
+            $callback = "$c::$m";
+            if (is_callable($callback)) {
+                $callback();
+            }
+        }
+
+        $infos['subdomains'] = xp_subdomain::v("api/json/subdomains") ?? [];
+        $infos['feedback'] = xp_subdomain::v("api/json/feedback") ?? "";
 
         // check callback
         if (function_exists("wp_send_json")) {
