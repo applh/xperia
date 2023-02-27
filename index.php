@@ -4,6 +4,10 @@
  * Plugin Name: xp-subdomain
  */
 
+// security
+if (!function_exists("add_action")) return;
+
+
 class xp_subdomain
 {
 
@@ -62,6 +66,11 @@ class xp_subdomain
         $class = static::v("class");
         // add the setup method
         add_action('init', "$class::init");
+
+        // https://developer.wordpress.org/reference/functions/add_menu_page/
+        if (is_admin()) {
+            add_action("admin_menu", "$class::admin_init");
+        }
     }
 
     static function init ()
@@ -123,6 +132,29 @@ class xp_subdomain
 
         return $template;
 
+    }
+
+    static function admin_init()
+    {
+        $class = static::v("class");
+
+        // https://developer.wordpress.org/reference/functions/add_plugins_page/
+        add_plugins_page(
+            "XP subdomains",
+            "XP subdomains",
+            "edit_plugins",
+            "xp-subdomains-admin",
+            "$class::admin_page",
+        );
+    }
+
+    static function admin_page()
+    {
+        $plugin_templates_dir = static::v("plugin_templates_dir");
+        $admin = "$plugin_templates_dir/admin.php";
+        if (is_file($admin)) {
+            include $admin;
+        }
     }
 }
 
