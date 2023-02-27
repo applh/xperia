@@ -14,6 +14,7 @@ let template = `
     <div>
         <div v-for="sd in center.subdomains">
             <input type="text" v-model="sd.name"/>
+            <input type="text" v-model="sd.page_on_front"/>
         </div>
     </div>
     <button @click="act_add_subdomain">Add Sub-Domain</button>
@@ -34,6 +35,7 @@ let methods = {
         let next = this.center.subdomains.length + 1;
         this.center.subdomains.push({
             name: 'www-' + next,
+            'page_on_front': '',
         });
     },
     act_save_subdomains: async function() {

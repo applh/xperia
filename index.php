@@ -102,6 +102,9 @@ class xp_subdomain
         // also needed if user logged in
         add_action("wp_ajax_xpsubdomain", "$class::api_json");
 
+        // add filter page_on_front
+        add_filter('option_page_on_front', "$class::option_page_on_front");
+
     }
 
     static function init()
@@ -129,6 +132,10 @@ class xp_subdomain
                 add_filter('robots_txt', "$class::robots_txt", 99, 2);
 
                 add_filter("template_include", "$class::template_include");
+
+                // hack to avoid redirection 301
+                remove_action( 'template_redirect', 'redirect_canonical' );
+
             }
         }
     }
@@ -229,6 +236,30 @@ class xp_subdomain
             wp_send_json($infos, 200); //use wp_json_send to return some data to the client.
             wp_die(); //use wp_die() once you have completed your execution.
         }        
+    }
+
+    static function option_page_on_front($value)
+    {
+        $host = static::v("host");
+        $subfront = null;
+        $subdomains = get_option("xp_subdomain", []);
+        if (!is_array($subdomains)) {
+            $subdomains = [];
+        }
+        foreach($subdomains as $i => $subdomain) {
+            // check if the name if the host
+            if ($host == ($subdomain["name"] ?? "")) {
+                // get the page_on_front
+                $sfi = intval($subdomain["page_on_front"] ?? 0);
+                if ($sfi > 0) {
+                    $subfront = $sfi;
+                    // debug
+                    header("xp-sub-front: $subfront");
+                }
+            }
+        }
+
+        return $subfront ?? $value;
     }
 }
 
