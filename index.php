@@ -30,11 +30,10 @@ class xp_subdomain
 
         // add the setup method
         add_action('plugins_loaded', "$myclass::plugins_loaded");
-
     }
 
     // autoloader
-    static function autoload ($class)
+    static function autoload($class)
     {
         // get the class file
         $file = __DIR__ . "/class/$class.php";
@@ -46,21 +45,20 @@ class xp_subdomain
     }
 
     // store key/value
-    static function v ($key, $value=null)
+    static function v($key, $value = null)
     {
         static $data = array();
 
         if ($value == null) {
             // read
             return $data[$key] ?? null;
-        }
-        else {
+        } else {
             // write
             $data[$key] = $value;
             return $value;
         }
     }
-    
+
     static function plugins_loaded()
     {
         $class = static::v("class");
@@ -73,7 +71,7 @@ class xp_subdomain
         }
     }
 
-    static function init ()
+    static function init()
     {
         $class = static::v("class");
 
@@ -89,20 +87,19 @@ class xp_subdomain
 
             add_filter("template_include", "$class::template_include");
         }
-
     }
 
-    static function robots_txt ($output, $public)
+    static function robots_txt($output, $public)
     {
         $output =
-        <<<txt
+            <<<txt
         User-agent: *
         Disallow: /
         txt;
         return $output;
     }
 
-    static function template_include ($template)
+    static function template_include($template)
     {
         // debug
         if (is_file($template)) {
@@ -119,19 +116,16 @@ class xp_subdomain
             $empty = "$plugin_templates_dir/empty.php";
             if (is_file($empty)) {
                 $template = $empty;
-            }
-            else {
+            } else {
                 $template = "";
             }
             // headers before echo
             // header("xp-sub-template: $template");
 
             echo $code;
-
         }
 
         return $template;
-
     }
 
     static function admin_init()
@@ -140,8 +134,8 @@ class xp_subdomain
 
         // https://developer.wordpress.org/reference/functions/add_plugins_page/
         add_plugins_page(
-            "XP subdomains",
-            "XP subdomains",
+            "XP Sub-Domains",
+            "XP Sub-Domains",
             "edit_plugins",
             "xp-subdomains-admin",
             "$class::admin_page",
