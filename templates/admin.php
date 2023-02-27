@@ -9,15 +9,17 @@ if (!function_exists("add_action")) return;
     <h3>XP Sub-Domains</h3>
     <p>{{ message }}</p>
 </div>
-<script type="module">
-// add vue app
-import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js'
-createApp({
-    data() {
-      return {
-        message: 'Hello Vue!'
-      }
-    }
-  }).mount('#app')
 
+<script type="module">
+    let media_url = "<?php xp_subdomain::e("media_url") ?>";
+    // add vue app
+    let vue = await import(media_url + '/vue.esm-browser.prod.js');
+
+    vue.createApp({
+        data() {
+            return {
+                message: 'Hello Vue!'
+            }
+        }
+    }).mount('#app')
 </script>

@@ -22,8 +22,12 @@ class xp_subdomain
         static::v("plugin_dir", __DIR__);
         // store the plugin templates dir
         static::v("plugin_templates_dir", __DIR__ . "/templates");
+
+        $plugin_url = plugin_dir_url(__FILE__);
         // store the plugin url
-        static::v("plugin_url", plugin_dir_url(__FILE__));
+        static::v("plugin_url", $plugin_url);
+        // store the media url
+        static::v("media_url", $plugin_url . "media");
 
         // add autoloader
         spl_autoload_register("$myclass::autoload");
@@ -59,6 +63,10 @@ class xp_subdomain
         }
     }
 
+    static function e($key, $default="") {
+        echo static::v($key) ?? $default;
+    }
+
     static function plugins_loaded()
     {
         $class = static::v("class");
@@ -81,11 +89,12 @@ class xp_subdomain
         header("xp-sub-host: $host");
 
         if (in_array($host, ["wp2.applh.com", "wp3.applh.com"])) {
+            if (!is_admin()) {
+                // https://developer.wordpress.org/reference/hooks/robots_txt/
+                add_filter('robots_txt', "$class::robots_txt", 99, 2);
 
-            // https://developer.wordpress.org/reference/hooks/robots_txt/
-            add_filter('robots_txt', "$class::robots_txt", 99, 2);
-
-            add_filter("template_include", "$class::template_include");
+                add_filter("template_include", "$class::template_include");
+            }
         }
     }
 
