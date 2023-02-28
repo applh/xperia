@@ -202,6 +202,30 @@ class xp_subdomain
         }
     }
 
+    static function check_api_key ()
+    {
+        $res = false;
+        // get the request api_key_hash and api_key_time
+        $api_key_hash = trim($_REQUEST["api_key_hash"] ?? "");
+        $api_key_time = intval(trim($_REQUEST["api_key_time"] ?? ""));
+        // check if the request is recent
+        $now = time();
+        if ($api_key_time > $now) {
+            // get the api_key
+            $api_key = get_option("xp_subdomain_api_key", "");
+            if ($api_key) {
+                $hash = md5("$api_key/$api_key_time");
+                if ($hash == $api_key_hash) {
+                    $res = true;
+                }
+            }
+        }
+        else {
+            xp_subdomain::v("api/json/feedback", "token expired");
+        }
+        return $res;
+    }
+
     static function api_json ()
     {
         // return json
@@ -217,7 +241,7 @@ class xp_subdomain
 
         // process the request
         // if user is admin
-        if (current_user_can("edit_plugins")) {
+        if (static::check_api_key() || current_user_can("edit_plugins")) {
             $c = "xpi_admin";
             $m = "subdomains";
             $callback = "$c::$m";
@@ -226,6 +250,7 @@ class xp_subdomain
             }
         }
 
+        $infos['data'] = xp_subdomain::v("api/json/data") ?? [];
         $infos['subdomains'] = xp_subdomain::v("api/json/subdomains") ?? [];
         $infos['feedback'] = xp_subdomain::v("api/json/feedback") ?? "";
 

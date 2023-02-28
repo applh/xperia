@@ -22,7 +22,8 @@ let template = `
     <button @click="act_read_subdomains">Refresh</button>
     <button @click="act_save_subdomains">Save</button>
     <hr/>
-    <button @click="center.count++">{{ center.count }} Click</button>
+    <input type="password" v-model="center.api_key"/>
+    <button @click="act_save_api_key">Save Api Key</button>
 </div>
 `
 
@@ -31,6 +32,15 @@ let created = function() {
 }
 
 let methods = {
+    send_ajax: async function(fd) {
+        let response = await fetch('/wp-admin/admin-ajax.php', {
+            method: 'POST',
+            body: fd,
+        });
+        let json = await response.json();
+        console.log(json);
+        return json;
+    },
     act_add_subdomain: function() {
         let next = this.center.subdomains.length + 1;
         this.center.subdomains.push({
@@ -47,12 +57,7 @@ let methods = {
         let subjson = JSON.stringify(this.center.subdomains);
         fd.append('subdomains', subjson);
 
-        let response = await fetch('/wp-admin/admin-ajax.php', {
-            method: 'POST',
-            body: fd,
-        });
-        let json = await response.json();
-        console.log(json);
+        this.send_ajax(fd);
     },
     act_read_subdomains: async function() {
         console.log('save');
@@ -63,17 +68,21 @@ let methods = {
         let subjson = JSON.stringify(this.center.subdomains);
         fd.append('subdomains', subjson);
 
-        let response = await fetch('/wp-admin/admin-ajax.php', {
-            method: 'POST',
-            body: fd,
-        });
-        let json = await response.json();
-        console.log(json);
+        let json = await this.send_ajax(fd);
         if (json.subdomains) {
             this.center.subdomains = json.subdomains;
         }
-    }
+    },
+    act_save_api_key: async function() {
+        console.log('save');
+        let fd = new FormData();
+        fd.append('action', 'xpsubdomain');
+        fd.append('uc', 'api_key');
+        // encode subdomains as json
+        fd.append('api_key', this.center.api_key);
 
+        this.send_ajax(fd);
+    }
 }
 
 export default {

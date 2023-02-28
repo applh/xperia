@@ -9,6 +9,7 @@ let vue = await import(media_url + '/vue.esm-browser.prod.js');
 export let center = vue.reactive({
     count: 0,
     subdomains: [],
+    api_key: '',
 })
 
 let computed = {
