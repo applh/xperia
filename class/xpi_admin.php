@@ -86,12 +86,15 @@ class xpi_admin_helper
             $data = json_decode($content, true) ?? [];
             if (is_array($data)) {
                 $nb_parts = 0;
+                // store data for later usage
+                xp_subdomain::v("xpi_admin/request_json/data", $data);
+
                 foreach($data as $index => $part) {
                     // get request data subdomains as json code
                     $todo = $part["todo"] ?? "";
                     if ($todo && is_callable("$todo")) {
                         // warning: can be dangerous 🔥
-                        $todo();
+                        $todo($part);
                         $nb_parts++;
                     }                    
                 }
@@ -116,5 +119,17 @@ class xpi_admin_helper
         // feedback
         $feedback = "test / " . time();
         xp_subdomain::$api_json_data["test"] = $feedback;
+    }
+
+    static function mail ($part)
+    {
+        extract($part);
+        $mailto ??= "";
+        $subject ??= "";
+        $message ??= "";
+        if ($mailto && $subject && $message) {
+            wp_mail($mailto, $subject, $message);
+            xp_subdomain::$api_json_data["mail"] = $part;
+        }
     }
 }
