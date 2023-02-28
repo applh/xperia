@@ -1,0 +1,87 @@
+{
+    "config_json": "config.json",
+    "uc": "request_json",
+    "attachments": {},
+    "uploads": [
+        {
+            "todo": "xp_task::add_posts",
+            "posts": [
+                {
+                    "post_title": "Home",
+                    "post_content": "Welcome",
+                    "post_status": "publish",
+                    "post_type": "page"
+                },
+                {
+                    "post_title": "News",
+                    "post_content": "The last news",
+                    "post_status": "publish",
+                    "post_type": "page"
+                },
+                {
+                    "post_title": "Contact",
+                    "post_content": "Please leave a message...",
+                    "post_status": "publish",
+                    "post_type": "page"
+                },
+                {
+                    "post_title": "Services",
+                    "post_content": "Our services",
+                    "post_status": "publish",
+                    "post_type": "page"
+                }
+            ]
+        },
+        {
+            "todo": "xp_task::add_menus",
+            "menus": [
+                {
+                    "menu_name": "menu-primary",
+                    "menu_items": [
+                        {
+                            "label": "Home",
+                            "uri": "home",
+                            "post_type": "page"
+                        },
+                        {
+                            "label": "News",
+                            "uri": "news",
+                            "post_type": "page"
+                        },
+                        {
+                            "label": "Services",
+                            "uri": "services",
+                            "post_type": "page"
+                        },
+                        {
+                            "label": "Contact",
+                            "uri": "contact",
+                            "post_type": "page"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "todo": "xp_task::update_options",
+            "options": {
+                "blogname": "My Company",
+                "blogdescription": "Connecting the Dots...",
+                "date_format": "Y-m-d",
+                "time_format": "H:i",
+                "default_pingback_flag": "0",
+                "default_ping_status": "0",
+                "default_comment_status": "0",
+                "show_avatars": "0",
+                "blog_public": "1",
+                "show_on_front": "page",
+                "page_on_front": {
+                    "name": "home"
+                },
+                "page_for_posts": {
+                    "name": "news"
+                }
+            }
+        }
+    ]
+}

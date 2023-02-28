@@ -65,6 +65,22 @@ class xp_task
         extract($part);
         $options ??= [];
         foreach ($options as $option => $value) {
+            // hack: check if value is array
+            if (is_array($value)) {
+                // get key "name"
+                $name = $value["name"] ?? "";
+                if ($name) {
+                    // search page by name
+                    $post_type = $value["post_type"] ?? "page";
+                    $post_found = get_page_by_path($name, post_type: $post_type);
+                    if ($post_found) {
+                        // get the ID
+                        $value = $post_found->ID;
+                        xp_subdomain::$api_json_data["update_options"][] = $post_found;    
+
+                    }
+                }
+            }
             update_option($option, $value);
         }
         xp_subdomain::$api_json_data["options"] = $options;
@@ -99,8 +115,14 @@ class xp_task
             
             $post_found = get_page_by_path($post_name, post_type: $post_type);
             if (!$post_found) {
+                // fill post data
+                $post["post_author"] ??= 1;
+
                 $post_id = wp_insert_post($post);
                 xp_subdomain::$api_json_data["add_posts"][] = $post_id;    
+            }
+            else {
+                xp_subdomain::$api_json_data["add_posts_exists"][] = $post_found;    
             }
         }
     }
