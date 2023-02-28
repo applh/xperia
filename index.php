@@ -11,6 +11,8 @@ if (!function_exists("add_action")) return;
 class xp_subdomain
 {
 
+    static $api_json_data = [];
+
     static function start()
     {
         $myclass = __CLASS__;
@@ -250,7 +252,7 @@ class xp_subdomain
             }
         }
 
-        $infos['data'] = xp_subdomain::v("api/json/data") ?? [];
+        $infos['data'] = xp_subdomain::v("api/json/data") ?? static::$api_json_data ?? [];
         $infos['subdomains'] = xp_subdomain::v("api/json/subdomains") ?? [];
         $infos['feedback'] = xp_subdomain::v("api/json/feedback") ?? "";
 

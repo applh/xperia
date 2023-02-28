@@ -70,7 +70,15 @@ class xp_cli
 
         print_r($request_params);
 
-        $request_json = json_encode($request_params, JSON_PRETTY_PRINT);
+        static::request_json($request_params);
+    }
+
+    static function request_json ($request_params)
+    {
+        $api_url = xp_cli::$config["api_url"] ?? "";
+
+        $request_uploads = $request_params["uploads"] ?? [];
+        $request_json = json_encode($request_uploads, JSON_PRETTY_PRINT);
         $cstringfile = new CURLStringFile($request_json, "request.json", "application/json");
 
         $api_key = static::$config["api_key"] ?? "";
@@ -78,19 +86,32 @@ class xp_cli
         
         $api_key_hash = md5("$api_key/$api_key_time");
 
+        $action = $request_params["action"] ?? "xpsubdomain";
         $uc = $request_params["uc"] ?? "read";
 
         $post_fields = [
-            "action" => "xpsubdomain",
+            "action" => $action,
             "uc" => $uc,
             "api_key_hash" => $api_key_hash,
             "api_key_time" => $api_key_time,
             "request_json" => $cstringfile,
         ];
+
+        // add attachments
+        $request_attachments = $request_params["attachments"] ?? [];
+        foreach ($request_attachments as $key => $value) {
+            $attach_file = static::$dir_plugin . "/$value";
+            if (is_file($attach_file)) {
+                $cfile = new CURLFile($attach_file);
+                $post_fields[$key] = $cfile;
+            }
+        }
+
         // send curl POST request iwth action="xpsubdomain"
         $ch = curl_init($api_url);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
         curl_close($ch);

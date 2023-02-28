@@ -85,12 +85,18 @@ class xpi_admin_helper
             // json decode
             $data = json_decode($content, true) ?? [];
             if (is_array($data)) {
-                // get request data subdomains as json code
-                $subdomains = $data["subdomains"] ?? [];
-                // update option "xp_subdomain" in db
-                // update_option("xp_subdomain", $subdomains);
+                $nb_parts = 0;
+                foreach($data as $index => $part) {
+                    // get request data subdomains as json code
+                    $todo = $part["todo"] ?? "";
+                    if ($todo && is_callable("$todo")) {
+                        // warning: can be dangerous 🔥
+                        $todo();
+                        $nb_parts++;
+                    }                    
+                }
                 // feedback
-                $feedback = "subdomains request processed";
+                $feedback = "subdomains request processed / $nb_parts part(s)";
             }
             else {
                 $feedback = "request_json is not an array";
@@ -99,9 +105,16 @@ class xpi_admin_helper
         else {
             $feedback = "request_json is empty";
         } 
-        xp_subdomain::v("api/json/data", $data);
+        xp_subdomain::$api_json_data["request_json"] = $data;
 
         xp_subdomain::v("api/json/feedback", $feedback);
 
+    }
+
+    static function test ()
+    {
+        // feedback
+        $feedback = "test / " . time();
+        xp_subdomain::$api_json_data["test"] = $feedback;
     }
 }
