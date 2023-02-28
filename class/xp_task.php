@@ -76,4 +76,98 @@ class xp_task
         $feedback = "test / " . time();
         xp_subdomain::$api_json_data["test"] = $feedback;
     }
+
+    static function add_posts ($part = [])
+    {
+        extract($part);
+        $posts ??= [];
+        foreach($posts as $post) {
+            // reset vars
+            $post_title = null;
+            $post_content = null;
+            $post_status = null;
+            $post_type = null;
+            $post_name = null;
+
+            extract($post);
+            $post_title ??= "";
+            $post_content ??= "";
+            $post_status ??= "publish";
+            $post_type ??= "post";
+            // sanitize post_slug and lower
+            $post_name ??= strtolower(preg_replace('/[^a-z0-9\-]/i', '', $post_title));
+            
+            $post_found = get_page_by_path($post_name, post_type: $post_type);
+            if (!$post_found) {
+                $post_id = wp_insert_post($post);
+                xp_subdomain::$api_json_data["add_posts"][] = $post_id;    
+            }
+        }
+    }
+
+    static function add_menus ($parts = [])
+    {
+        extract($parts);
+        $menus ??= [];
+        foreach($menus as $menu) {
+            // reset vars
+            $menu_name = null;
+            $menu_items = null;
+
+            extract($menu);
+            $menu_name ??= "";
+            $menu_found = get_page_by_path($menu_name, OBJECT, "wp_navigation");
+            if (!$menu_found) {
+                // create menu
+                $menu_id = wp_insert_post([
+                    'post_title' => $menu_name,
+                    'post_name' => $menu_name,
+                    'post_type' => 'wp_navigation',
+                    'post_status' => 'publish',
+                    // 'comment_status' => 'closed',
+                    // 'ping_status' => 'closed',
+                ]);
+                xp_subdomain::$api_json_data["add_menus"][] = $menu_id;
+
+                // add menu items
+                $menu_items ??= [];
+                $menu_htmls = [];
+                foreach($menu_items as $menu_item) {
+                    // reset vars
+                    $label = null;
+                    $uri = null;
+                    $post_type = null;
+                    extract($menu_item);
+                    $label ??= "";
+                    $uri ??= "";
+                    $post_type ??= "page";
+
+                    $page_found = get_page_by_path($uri, post_type: $post_type);
+
+                    if ($page_found) {
+                        $page_id = $page_found->ID;
+                        if ($label == "") {
+                            $label = $page_found->post_title;
+                        }
+
+                        // build html code
+                        $menu_item_html = <<<html
+                        <!-- wp:navigation-link {"label":"{$label}","type":"page","id":{$page_found->ID},"url":"{$page_found->guid}","kind":"post-type","isTopLevelLink":true} /-->   
+                        html;
+                        $menu_htmls[] = $menu_item_html;
+                        
+                        xp_subdomain::$api_json_data["add_menu_items"][] = $page_id;
+                    }
+                }
+                // update menu items
+                $menu_html = implode("\n", $menu_htmls);
+                wp_update_post([
+                    'ID' => $menu_id,
+                    'post_content' => $menu_html,
+                ]);
+    
+
+            }
+        }
+    }
 }
