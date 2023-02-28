@@ -33,7 +33,11 @@ class xp_subdomain
             $index = "$data_dir/index.php";
             if (!is_file($index)) {
                 $secret  = md5(password_hash(uniqid(), PASSWORD_DEFAULT));
-                $code = '<?php $secret = "' . $secret . '";';
+                // get model file from media/index.php
+                $code = file_get_contents(__DIR__ . "/media/index.php");
+                // replace YOUR_SECRET with the secret
+                $code = str_replace("YOUR_SECRET", $secret, $code);
+                
                 file_put_contents($index, $code);
             }
         }

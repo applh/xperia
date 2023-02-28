@@ -22,6 +22,7 @@ let template = `
     <button @click="act_read_subdomains">Refresh</button>
     <button @click="act_save_subdomains">Save</button>
     <hr/>
+    <h3>API key</h3>
     <input type="password" v-model="center.api_key"/>
     <button @click="act_save_api_key">Save Api Key</button>
 </div>

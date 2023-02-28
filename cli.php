@@ -46,12 +46,6 @@ class xp_cli
 
     static function cmd_send ()
     {
-        $api_url = xp_cli::$config["api_url"] ?? "";
-
-        if (!$api_url) {
-            echo "api_url not found in config.json";
-            return;
-        }
 
         // json file from static::$args[2]
         $file = static::$args[2] ?? "";
@@ -60,10 +54,33 @@ class xp_cli
             if (is_file($file)) {
                 $request_json = file_get_contents($file);
                 $request_params = json_decode($request_json, true);
+
+                // load local config file
+                $config_json = trim($request_params["config_json"] ?? "");
+                if ($config_json) {
+                    $config_json = dirname($file) . "/$config_json";
+                    if (is_file($config_json)) {
+                        $config = file_get_contents($config_json);
+                        $config = json_decode($config, true) ?? [];
+                        // override common config with local config
+                        static::$config = $config + static::$config;
+                    }
+                }
+
             }
         }
         else {
             $request_params = [];
+        }
+
+        $api_url = static::$config["api_url"] ?? "";
+
+        if (!$api_url) {
+            echo "api_url not found in config.json";
+            return;
+        }
+        else {
+            echo "(api_url: $api_url)";
         }
         // add time stamp
         $request_params["timestamp"] = time();
