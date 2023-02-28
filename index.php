@@ -37,7 +37,7 @@ class xp_subdomain
                 $code = file_get_contents(__DIR__ . "/media/index.php");
                 // replace YOUR_SECRET with the secret
                 $code = str_replace("YOUR_SECRET", $secret, $code);
-                
+
                 file_put_contents($index, $code);
             }
         }
@@ -85,7 +85,8 @@ class xp_subdomain
         }
     }
 
-    static function e($key, $default="") {
+    static function e($key, $default = "")
+    {
         echo static::v($key) ?? $default;
     }
 
@@ -110,7 +111,6 @@ class xp_subdomain
 
         // add filter page_on_front
         add_filter('option_page_on_front', "$class::option_page_on_front");
-
     }
 
     static function init()
@@ -124,10 +124,9 @@ class xp_subdomain
         $subdomains = get_option("xp_subdomain", []);
         if (!is_array($subdomains)) {
             $subdomains = [];
-        }
-        else {
+        } else {
             // extract the subdomains names
-            $subdomains = array_map(function($subdomain) {
+            $subdomains = array_map(function ($subdomain) {
                 return $subdomain["name"] ?? "";
             }, $subdomains);
         }
@@ -140,8 +139,7 @@ class xp_subdomain
                 add_filter("template_include", "$class::template_include");
 
                 // hack to avoid redirection 301
-                remove_action( 'template_redirect', 'redirect_canonical' );
-
+                remove_action('template_redirect', 'redirect_canonical');
             }
         }
     }
@@ -149,7 +147,7 @@ class xp_subdomain
     static function robots_txt($output, $public)
     {
         $output =
-        <<<txt
+            <<<txt
         User-agent: *
         Disallow: /
         txt;
@@ -208,7 +206,7 @@ class xp_subdomain
         }
     }
 
-    static function check_api_key ()
+    static function check_api_key()
     {
         $res = false;
         // get the request api_key_hash and api_key_time
@@ -218,21 +216,21 @@ class xp_subdomain
         $now = time();
         if ($api_key_time > $now) {
             // get the api_key
-            $api_key = get_option("xp_subdomain_api_key", "");
+            $api_key = trim(get_option("xp_subdomain_api_key", ""));
+            // basic security
             if ($api_key) {
                 $hash = md5("$api_key/$api_key_time");
                 if ($hash == $api_key_hash) {
                     $res = true;
                 }
             }
-        }
-        else {
+        } else {
             xp_subdomain::v("api/json/feedback", "token expired");
         }
         return $res;
     }
 
-    static function api_json ()
+    static function api_json()
     {
         // return json
         $infos = [];
@@ -266,7 +264,7 @@ class xp_subdomain
             // header("X-Xpress-debug: wp_json_send");
             wp_send_json($infos, 200); //use wp_json_send to return some data to the client.
             wp_die(); //use wp_die() once you have completed your execution.
-        }        
+        }
     }
 
     static function option_page_on_front($value)
@@ -277,7 +275,7 @@ class xp_subdomain
         if (!is_array($subdomains)) {
             $subdomains = [];
         }
-        foreach($subdomains as $i => $subdomain) {
+        foreach ($subdomains as $i => $subdomain) {
             // check if the name if the host
             if ($host == ($subdomain["name"] ?? "")) {
                 // get the page_on_front
