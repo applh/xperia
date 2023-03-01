@@ -103,3 +103,8 @@ Once the plugin active, you can add subdomains and assign home pages to them.
 * Add email PHP proxy code generator
 
 * Add android app to send SMS from WP website API
+
+* Add code in post_content
+  * FIXME: sanitize_post removes tags like `<script>`, etc...
+
+

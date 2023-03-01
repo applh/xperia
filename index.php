@@ -100,6 +100,9 @@ class xp_subdomain
         if (is_admin()) {
             add_action("admin_menu", "$class::admin_init");
         }
+        // add page template
+        add_filter("theme_page_templates", "$class::theme_page_templates", 99, 3);
+        add_filter("template_include", "$class::page_template_include");
 
         // AJAX
         // add new ajax action (not logged in) action="xpsubdomain"
@@ -111,6 +114,7 @@ class xp_subdomain
 
         // add filter page_on_front
         add_filter('option_page_on_front', "$class::option_page_on_front");
+
     }
 
     static function init()
@@ -154,6 +158,24 @@ class xp_subdomain
         return $output;
     }
 
+    static function theme_page_templates ($templates, $theme, $post)
+    {
+        // add our page template
+        $templates["xp-page-template.php"] = "XP Page Template";
+        return $templates;
+    }
+
+    static function page_template_include($template)
+    {
+        // page template
+        $page_template_slug = get_page_template_slug();
+
+        if ($page_template_slug == "xp-page-template.php") {
+            $template = static::v("plugin_dir") . "/templates/page-template.php";
+        }
+        return $template;
+    }
+
     static function template_include($template)
     {
         // debug
@@ -175,7 +197,7 @@ class xp_subdomain
                 $template = "";
             }
             // headers before echo
-            // header("xp-sub-template: $template");
+            header("xp-sub-template: $template");
 
             echo $code;
         }
@@ -290,6 +312,7 @@ class xp_subdomain
 
         return $subfront ?? $value;
     }
+
 }
 
 xp_subdomain::start();
