@@ -192,4 +192,44 @@ class xp_task
             }
         }
     }
+
+    static function add_media ($part = [])
+    {
+        extract($part);
+        $media ??= [];
+        array_map(function($m){
+            extract($m);
+            $file ??=  "";
+            if ($file) {
+                // get the uploaded file tmp_name
+                $tmp_name = $_FILES["$file"]["tmp_name"] ?? "";
+                $attach_name = $_FILES["$file"]["name"] ?? "";
+
+                if ($tmp_name) {
+                    $hash = md5_file($tmp_name);
+                    $post_found = get_page_by_path($hash, OBJECT, "attachment");
+                    if (!$post_found) {
+                        // upload file
+                        $title ??= $attach_name;
+                        $caption ??= $title;
+                        $description ??= $title; 
+                        $page_id = media_handle_upload($file, 0, [
+                            'post_title' => $title,
+                            'post_name' => $hash,
+                            'post_excerpt' => $caption,
+                            'post_content' => $description,
+                        ]);
+                        $post = get_post($page_id, ARRAY_A);
+                        xp_subdomain::$api_json_data["add_media"][] = $post;    
+                    }
+                    else {
+                        xp_subdomain::$api_json_data["add_media_found"][] = $post_found;    
+                    }
+                }
+
+            }
+
+        }, $media);
+
+    }
 }
