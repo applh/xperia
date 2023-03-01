@@ -97,14 +97,9 @@ class xp_task
     {
         extract($part);
         $posts ??= [];
-        foreach($posts as $post) {
-            // reset vars
-            $post_title = null;
-            $post_content = null;
-            $post_status = null;
-            $post_type = null;
-            $post_name = null;
 
+        // function will isolate the scope and reset local vars
+        array_map(function($post) {
             extract($post);
             $post_title ??= "";
             $post_content ??= "";
@@ -117,12 +112,63 @@ class xp_task
             if (!$post_found) {
                 // fill post data
                 $post["post_author"] ??= 1;
-
+                // load content from file
+                $post_content_file ??= "";
+                if ($post_content_file) {
+                    $post_content_upload = $_FILES["$post_content_file"]["tmp_name"] ?? "";
+                    if ($post_content_upload && file_exists($post_content_upload)) {
+                        $post_content = file_get_contents($post_content_upload);
+                        $post["post_content"] = $post_content;
+                    }
+                }
                 $post_id = wp_insert_post($post);
+                
+                // load featured image from file
+                $featured_image ??= "";
+                if ($featured_image) {
+                    $post_image_upload = $_FILES["$featured_image"]["tmp_name"] ?? "";
+                    if ($post_image_upload && file_exists($post_image_upload)) {
+                        $hash = md5_file($post_image_upload);
+                        $post_image = get_page_by_path($hash, OBJECT, "attachment");
+                        if ($post_image) {
+                            $post_image_id = $post_image->ID;
+                            set_post_thumbnail($post_id, $post_image_id);
+                        }
+                    }
+
+                }
+
                 xp_subdomain::$api_json_data["add_posts"][] = $post_id;    
             }
             else {
                 xp_subdomain::$api_json_data["add_posts_exists"][] = $post_found;    
+            }
+        }, $posts);
+
+    }
+
+    /**
+     * Delete posts by post_name
+     * warning: post_name is not unique
+     */
+    static function delete_posts ($part = [])
+    {
+        extract($part);
+        $posts ??= [];
+        $simulate ??= false;
+
+        $founds = get_posts([
+            "post_name__in" => $posts,
+            "post_type" => "any",
+            "post_status" => "any",
+            "numberposts" => -1,
+        ]);
+        xp_subdomain::$api_json_data["delete_posts_founds"][] = $founds;
+
+        foreach($founds as $found) {
+            if (!$simulate) {
+                xp_subdomain::$api_json_data["delete_posts"][] = $found;
+                wp_delete_post($found->ID, true);
             }
         }
     }
@@ -180,6 +226,7 @@ class xp_task
                         
                         xp_subdomain::$api_json_data["add_menu_items"][] = $page_id;
                     }
+                    
                 }
                 // update menu items
                 $menu_html = implode("\n", $menu_htmls);
@@ -189,6 +236,9 @@ class xp_task
                 ]);
     
 
+            }
+            else {
+                xp_subdomain::$api_json_data["add_menus_exists"][] = $menu_found;    
             }
         }
     }
@@ -223,7 +273,7 @@ class xp_task
                         xp_subdomain::$api_json_data["add_media"][] = $post;    
                     }
                     else {
-                        xp_subdomain::$api_json_data["add_media_found"][] = $post_found;    
+                        xp_subdomain::$api_json_data["add_media_exists"][] = $post_found;    
                     }
                 }
 

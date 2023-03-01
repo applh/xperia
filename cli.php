@@ -11,6 +11,10 @@ class xp_cli
 
     static function run ()
     {
+        // get the args
+        static::$args = $_SERVER["argv"];
+        print_r(static::$args);
+
         $dir_plugin = __DIR__;
         $dir_cli = "$dir_plugin/my-cli";
         $config_json = "$dir_cli/config.json";
@@ -32,9 +36,6 @@ class xp_cli
             static::$config = $config;
         }
 
-        // get the args
-        static::$args = $_SERVER["argv"];
-        print_r(static::$args);
         $cmd = static::$args[1] ?? "";
         $cmd = "xp_cli::cmd_$cmd";
         if (is_callable("$cmd")) {
@@ -132,6 +133,14 @@ class xp_cli
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
         curl_close($ch);
+
+        if(!$response) {
+            echo "Error: " . curl_error($ch);
+        }
+        else {
+            $info = curl_getinfo($ch);
+            print_r($info);
+        }
         // echo $response;
         $data = json_decode($response, true);
         print_r($data);
