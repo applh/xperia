@@ -114,7 +114,6 @@ class xperia
 
         // add filter page_on_front
         add_filter('option_page_on_front', "$class::option_page_on_front");
-
     }
 
     static function init()
@@ -147,12 +146,54 @@ class xperia
             }
         }
 
+        // register blocks
+        static::init_blocks();
+    }
+
+    static function init_blocks ()
+    {
         // https://developer.wordpress.org/block-editor/how-to-guides/block-tutorial/writing-your-first-block-type/
         // register block
-        register_block_type( __DIR__ );
+        register_block_type(__DIR__);
+
+        // dynamic block
+        // https://developer.wordpress.org/block-editor/how-to-guides/block-tutorial/creating-dynamic-blocks/
+
+        // automatically load dependencies and version
+        $asset_file = include(plugin_dir_path(__FILE__) . 'block-d.asset.php');
+
+        wp_register_script(
+            'xperia-block-d',
+            plugins_url('block-d.js', __FILE__),
+            $asset_file['dependencies'],
+            $asset_file['version']
+        );
+
+        register_block_type('xperia/block-d', array(
+            'api_version' => 2,
+            'editor_script' => 'xperia-block-d', // The script name we gave in the wp_register_script() call.
+            'render_callback' => 'xperia::block_d_render_callback'
+        ));
 
     }
 
+    static function block_d_render_callback($attributes, $content)
+    {
+        $recent_posts = wp_get_recent_posts(array(
+            'numberposts' => 1,
+            'post_status' => 'publish',
+        ));
+        if (count($recent_posts) === 0) {
+            return 'No posts';
+        }
+        $post = $recent_posts[0];
+        $post_id = $post['ID'];
+        return sprintf(
+            '<a class="wp-block-my-plugin-latest-post" href="%1$s">%2$s</a>',
+            esc_url(get_permalink($post_id)),
+            esc_html(get_the_title($post_id))
+        );
+    }
 
     static function robots_txt($output, $public)
     {
@@ -164,7 +205,7 @@ class xperia
         return $output;
     }
 
-    static function theme_page_templates ($templates, $theme, $post)
+    static function theme_page_templates($templates, $theme, $post)
     {
         // add our page template
         $templates["xp-page-template.php"] = "XP Page Template";
@@ -318,7 +359,6 @@ class xperia
 
         return $subfront ?? $value;
     }
-
 }
 
 xperia::start();
