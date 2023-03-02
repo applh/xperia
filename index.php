@@ -150,7 +150,7 @@ class xperia
         static::init_blocks();
     }
 
-    static function init_blocks ()
+    static function init_blocks()
     {
         // https://developer.wordpress.org/block-editor/how-to-guides/block-tutorial/writing-your-first-block-type/
         // register block
@@ -172,9 +172,9 @@ class xperia
         register_block_type('xperia/block-d', array(
             'api_version' => 2,
             'editor_script' => 'xperia-block-d', // The script name we gave in the wp_register_script() call.
-            'render_callback' => 'xperia::block_d_render_callback'
+            'render_callback' => 'xperia::block_d_render_callback',
+            // 'supports' => array('color' => true, 'align' => true),
         ));
-
     }
 
     static function block_d_render_callback($attributes, $content)
@@ -188,8 +188,11 @@ class xperia
         }
         $post = $recent_posts[0];
         $post_id = $post['ID'];
+        $wrapper_attributes = get_block_wrapper_attributes();
+
         return sprintf(
-            '<a class="wp-block-my-plugin-latest-post" href="%1$s">%2$s</a>',
+            '<a %1s href="%1$s">%2$s</a>',
+            $wrapper_attributes,
             esc_url(get_permalink($post_id)),
             esc_html(get_the_title($post_id))
         );
@@ -208,7 +211,7 @@ class xperia
     static function theme_page_templates($templates, $theme, $post)
     {
         // add our page template
-        $templates["xp-page-template.php"] = "XP Page Template";
+        $templates["xp-page-template"] = "XP Page Template";
         return $templates;
     }
 
@@ -217,7 +220,7 @@ class xperia
         // page template
         $page_template_slug = get_page_template_slug();
 
-        if ($page_template_slug == "xp-page-template.php") {
+        if ($page_template_slug == "xp-page-template") {
             $template = static::v("plugin_dir") . "/templates/page-template.php";
         }
         return $template;
@@ -244,7 +247,7 @@ class xperia
                 $template = "";
             }
             // headers before echo
-            header("xp-sub-template: $template");
+            // header("xp-sub-template: $template");
 
             echo $code;
         }
