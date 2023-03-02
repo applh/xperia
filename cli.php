@@ -8,9 +8,13 @@ class xp_cli
     static $config = [];
     static $args = [];
     static $dir_plugin = __DIR__;
+    static $v = [];
 
-    static function run ()
+    static function run()
     {
+        // add autoloader
+        spl_autoload_register("xp_cli::autoload");
+
         // get the args
         static::$args = $_SERVER["argv"];
         print_r(static::$args);
@@ -45,7 +49,7 @@ class xp_cli
         }
     }
 
-    static function cmd_send ()
+    static function cmd_send()
     {
 
         // json file from static::$args[2]
@@ -53,6 +57,10 @@ class xp_cli
         if ($file) {
             $file = static::$dir_plugin . "/$file";
             if (is_file($file)) {
+
+                $local_dir = dirname($file);
+                static::$v["local_dir"] = $local_dir;
+
                 $request_json = file_get_contents($file);
                 $request_params = json_decode($request_json, true);
 
@@ -67,10 +75,8 @@ class xp_cli
                         static::$config = $config + static::$config;
                     }
                 }
-
             }
-        }
-        else {
+        } else {
             $request_params = [];
         }
 
@@ -79,8 +85,7 @@ class xp_cli
         if (!$api_url) {
             echo "api_url not found in config.json";
             return;
-        }
-        else {
+        } else {
             echo "(api_url: $api_url)";
         }
         // add time stamp
@@ -91,73 +96,62 @@ class xp_cli
         static::request_json($request_params);
     }
 
-    static function request_json ($request_params)
+    static function request_json($request_params)
     {
-        $api_url = xp_cli::$config["api_url"] ?? "";
-
-        $request_uploads = $request_params["uploads"] ?? [];
-        $request_json = json_encode($request_uploads, JSON_PRETTY_PRINT);
-        $cstringfile = new CURLStringFile($request_json, "request.json", "application/json");
-
-        $api_key = static::$config["api_key"] ?? "";
-        $api_key_time = time() + intval(static::$config["api_key_time"] ?? 3600);
+        xp_cli::$v["request_params"] = $request_params;
         
-        $api_key_hash = md5("$api_key/$api_key_time");
-
-        $action = $request_params["action"] ?? "xperia";
-        $uc = $request_params["uc"] ?? "read";
-
-        $post_fields = [
-            "action" => $action,
-            "uc" => $uc,
-            "api_key_hash" => $api_key_hash,
-            "api_key_time" => $api_key_time,
-            "request_json" => $cstringfile,
-        ];
-
-        // add attachments
-        $request_attachments = $request_params["attachments"] ?? [];
-        foreach ($request_attachments as $key => $value) {
-            $attach_file = static::$dir_plugin . "/$value";
-            if (is_file($attach_file)) {
-                $cfile = new CURLFile($attach_file);
-                $post_fields[$key] = $cfile;
+        // get before tasks
+        $local_tasks = $request_params["local_tasks"] ?? [];
+        $local_tasks = static::build_tasks($local_tasks);
+        foreach($local_tasks as $local_task) {
+            $local_todo = $local_task["todo"] ?? "";
+            if (is_callable($local_todo)) {
+                $local_todo($local_task);
             }
-        }
-
-        // send curl POST request iwth action="xperia"
-        $ch = curl_init($api_url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        if(!$response) {
-            echo "Error: " . curl_error($ch);
-        }
-        else {
-            $info = curl_getinfo($ch);
-            print_r($info);
-        }
-        // echo $response;
-        $data = json_decode($response, true);
-        print_r($data);
-
+        }        
     }
 
-    static function cmd_md5 ()
+    static function build_tasks($request_tasks = [])
+    {
+        $build_tasks = [];
+        // loop each task
+        foreach ($request_tasks as $task) {
+            // get json file
+            // path is relative to the json file
+            $local_dir = static::$v["local_dir"] ?? "";
+            $task_file = "$local_dir/$task.json";
+            if (is_file($task_file)) {
+                $task_data = file_get_contents($task_file);
+                $task_data = json_decode($task_data, true) ?? [];
+                // add task data
+                $build_tasks[] = $task_data;
+            }
+        }
+        return $build_tasks;
+    }
+
+    static function cmd_md5()
     {
         $random = md5(password_hash(uniqid(), PASSWORD_DEFAULT));
-        echo 
+        echo
         <<<txt
         $random
 
         txt;
     }
+
+    // autoloader
+    static function autoload($class)
+    {
+        // get the class file
+        $file = __DIR__ . "/class/$class.php";
+
+        // check if the file exists
+        if (file_exists($file)) {
+            require $file;
+        }
+    }
+    
 }
 
 xp_cli::run();
-
-
