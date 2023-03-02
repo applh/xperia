@@ -156,6 +156,8 @@ class xperia
         // register block
         register_block_type(__DIR__ . "/block-a");
         register_block_type(__DIR__ . "/block-i");
+        register_block_type(__DIR__ . "/block-r");
+        
         include(__DIR__ . "/block-d/register.php");
     }
 
