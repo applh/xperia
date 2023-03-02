@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Plugin Name: xp-subdomain
+ * Plugin Name: XPeria 🔥
  */
 
 // security
@@ -146,7 +146,13 @@ class xperia
                 remove_action('template_redirect', 'redirect_canonical');
             }
         }
+
+        // https://developer.wordpress.org/block-editor/how-to-guides/block-tutorial/writing-your-first-block-type/
+        // register block
+        register_block_type( __DIR__ );
+
     }
+
 
     static function robots_txt($output, $public)
     {
@@ -211,8 +217,8 @@ class xperia
 
         // https://developer.wordpress.org/reference/functions/add_plugins_page/
         add_plugins_page(
-            "XP Sub-Domains",
-            "XP Sub-Domains",
+            "XPeria",
+            "XPeria",
             "edit_plugins",
             "xp-subdomains-admin",
             "$class::admin_page",

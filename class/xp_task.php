@@ -86,6 +86,16 @@ class xp_task
         xperia::$api_json_data["options"] = $options;
     }
 
+    static function delete_options ($part = [])
+    {
+        extract($part);
+        $options ??= [];
+        foreach ($options as $option => $value) {
+            delete_option($option);
+        }
+        xperia::$api_json_data["delete_options"] = $options;
+    }
+
     static function test()
     {
         // feedback
