@@ -16,7 +16,7 @@ if (!function_exists("add_action")) return;
     </div>
 </template>
 <script type="module">
-    let media_url = "<?php xp_subdomain::e("media_url") ?>";
+    let media_url = "<?php xperia::e("media_url") ?>";
     // add vue app
     let vue = await import(media_url + '/vue.esm-browser.prod.js');
     let ds = await import(media_url + '/xp-datastore.js');    

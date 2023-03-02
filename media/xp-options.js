@@ -52,7 +52,7 @@ let methods = {
     act_save_subdomains: async function() {
         console.log('save');
         let fd = new FormData();
-        fd.append('action', 'xpsubdomain');
+        fd.append('action', 'xperia');
         fd.append('uc', 'update');
         // encode subdomains as json
         let subjson = JSON.stringify(this.center.subdomains);
@@ -63,7 +63,7 @@ let methods = {
     act_read_subdomains: async function() {
         console.log('save');
         let fd = new FormData();
-        fd.append('action', 'xpsubdomain');
+        fd.append('action', 'xperia');
         fd.append('uc', 'read');
         // encode subdomains as json
         let subjson = JSON.stringify(this.center.subdomains);
@@ -77,7 +77,7 @@ let methods = {
     act_save_api_key: async function() {
         console.log('save');
         let fd = new FormData();
-        fd.append('action', 'xpsubdomain');
+        fd.append('action', 'xperia');
         fd.append('uc', 'api_key');
         // encode subdomains as json
         fd.append('api_key', this.center.api_key);

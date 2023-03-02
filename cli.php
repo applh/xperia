@@ -104,7 +104,7 @@ class xp_cli
         
         $api_key_hash = md5("$api_key/$api_key_time");
 
-        $action = $request_params["action"] ?? "xpsubdomain";
+        $action = $request_params["action"] ?? "xperia";
         $uc = $request_params["uc"] ?? "read";
 
         $post_fields = [
@@ -125,7 +125,7 @@ class xp_cli
             }
         }
 
-        // send curl POST request iwth action="xpsubdomain"
+        // send curl POST request iwth action="xperia"
         $ch = curl_init($api_url);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);

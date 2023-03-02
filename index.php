@@ -8,7 +8,7 @@
 if (!function_exists("add_action")) return;
 
 
-class xp_subdomain
+class xperia
 {
 
     static $api_json_data = [];
@@ -105,12 +105,12 @@ class xp_subdomain
         add_filter("template_include", "$class::page_template_include");
 
         // AJAX
-        // add new ajax action (not logged in) action="xpsubdomain"
+        // add new ajax action (not logged in) action="xperia"
         // warning: POST request only
-        // curl -v -X POST -d "action=xpsubdomain" https://YOUSITE.COM/wp-admin/admin-ajax.php -o ajax.json
-        add_action("wp_ajax_nopriv_xpsubdomain", "$class::api_json");
+        // curl -v -X POST -d "action=xperia" https://YOUSITE.COM/wp-admin/admin-ajax.php -o ajax.json
+        add_action("wp_ajax_nopriv_xperia", "$class::api_json");
         // also needed if user logged in
-        add_action("wp_ajax_xpsubdomain", "$class::api_json");
+        add_action("wp_ajax_xperia", "$class::api_json");
 
         // add filter page_on_front
         add_filter('option_page_on_front', "$class::option_page_on_front");
@@ -125,7 +125,7 @@ class xp_subdomain
         static::v("host", $host);
 
         header("xp-sub-host: $host");
-        $subdomains = get_option("xp_subdomain", []);
+        $subdomains = get_option("xperia", []);
         if (!is_array($subdomains)) {
             $subdomains = [];
         } else {
@@ -238,7 +238,7 @@ class xp_subdomain
         $now = time();
         if ($api_key_time > $now) {
             // get the api_key
-            $api_key = trim(get_option("xp_subdomain_api_key", ""));
+            $api_key = trim(get_option("xperia_api_key", ""));
             // basic security
             if ($api_key) {
                 $hash = md5("$api_key/$api_key_time");
@@ -247,7 +247,7 @@ class xp_subdomain
                 }
             }
         } else {
-            xp_subdomain::v("api/json/feedback", "token expired");
+            static::v("api/json/feedback", "token expired");
         }
         return $res;
     }
@@ -276,9 +276,9 @@ class xp_subdomain
             }
         }
 
-        $infos['data'] = xp_subdomain::v("api/json/data") ?? static::$api_json_data ?? [];
-        $infos['subdomains'] = xp_subdomain::v("api/json/subdomains") ?? [];
-        $infos['feedback'] = xp_subdomain::v("api/json/feedback") ?? "";
+        $infos['data'] = static::v("api/json/data") ?? static::$api_json_data ?? [];
+        $infos['subdomains'] = static::v("api/json/subdomains") ?? [];
+        $infos['feedback'] = static::v("api/json/feedback") ?? "";
 
         // check callback
         if (function_exists("wp_send_json")) {
@@ -293,7 +293,7 @@ class xp_subdomain
     {
         $host = static::v("host");
         $subfront = null;
-        $subdomains = get_option("xp_subdomain", []);
+        $subdomains = get_option("xperia", []);
         if (!is_array($subdomains)) {
             $subdomains = [];
         }
@@ -315,4 +315,4 @@ class xp_subdomain
 
 }
 
-xp_subdomain::start();
+xperia::start();

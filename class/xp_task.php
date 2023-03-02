@@ -27,7 +27,7 @@ class xp_task
                     $tmp_name = $_FILES["$attachment"]["tmp_name"] ?? "";
                     $attach_name = $_FILES["$attachment"]["name"] ?? "";
                     if ($attach_name && $tmp_name && file_exists($tmp_name)) {
-                        $data_dir = xp_subdomain::v("plugin_data_dir");
+                        $data_dir = xperia::v("plugin_data_dir");
                         $tmp_dir = md5(password_hash(uniqid(), PASSWORD_DEFAULT));
                         $tmp_dir = "$data_dir/$tmp_dir";
 
@@ -56,7 +56,7 @@ class xp_task
                 rmdir("$tmp_dir");
             }
 
-            xp_subdomain::$api_json_data["mail"] = $part;
+            xperia::$api_json_data["mail"] = $part;
         }
     }
 
@@ -76,21 +76,21 @@ class xp_task
                     if ($post_found) {
                         // get the ID
                         $value = $post_found->ID;
-                        xp_subdomain::$api_json_data["update_options"][] = $post_found;    
+                        xperia::$api_json_data["update_options"][] = $post_found;    
 
                     }
                 }
             }
             update_option($option, $value);
         }
-        xp_subdomain::$api_json_data["options"] = $options;
+        xperia::$api_json_data["options"] = $options;
     }
 
     static function test()
     {
         // feedback
         $feedback = "test / " . time();
-        xp_subdomain::$api_json_data["test"] = $feedback;
+        xperia::$api_json_data["test"] = $feedback;
     }
 
     static function add_posts ($part = [])
@@ -138,10 +138,10 @@ class xp_task
 
                 }
 
-                xp_subdomain::$api_json_data["add_posts"][] = $post_id;    
+                xperia::$api_json_data["add_posts"][] = $post_id;    
             }
             else {
-                xp_subdomain::$api_json_data["add_posts_exists"][] = $post_found;    
+                xperia::$api_json_data["add_posts_exists"][] = $post_found;    
             }
         }, $posts);
 
@@ -163,11 +163,11 @@ class xp_task
             "post_status" => "any",
             "numberposts" => -1,
         ]);
-        xp_subdomain::$api_json_data["delete_posts_founds"][] = $founds;
+        xperia::$api_json_data["delete_posts_founds"][] = $founds;
 
         foreach($founds as $found) {
             if (!$simulate) {
-                xp_subdomain::$api_json_data["delete_posts"][] = $found;
+                xperia::$api_json_data["delete_posts"][] = $found;
                 wp_delete_post($found->ID, true);
             }
         }
@@ -195,7 +195,7 @@ class xp_task
                     // 'comment_status' => 'closed',
                     // 'ping_status' => 'closed',
                 ]);
-                xp_subdomain::$api_json_data["add_menus"][] = $menu_id;
+                xperia::$api_json_data["add_menus"][] = $menu_id;
 
                 // add menu items
                 $menu_items ??= [];
@@ -224,7 +224,7 @@ class xp_task
                         html;
                         $menu_htmls[] = $menu_item_html;
                         
-                        xp_subdomain::$api_json_data["add_menu_items"][] = $page_id;
+                        xperia::$api_json_data["add_menu_items"][] = $page_id;
                     }
                     
                 }
@@ -238,7 +238,7 @@ class xp_task
 
             }
             else {
-                xp_subdomain::$api_json_data["add_menus_exists"][] = $menu_found;    
+                xperia::$api_json_data["add_menus_exists"][] = $menu_found;    
             }
         }
     }
@@ -270,10 +270,10 @@ class xp_task
                             'post_content' => $description,
                         ]);
                         $post = get_post($page_id, ARRAY_A);
-                        xp_subdomain::$api_json_data["add_media"][] = $post;    
+                        xperia::$api_json_data["add_media"][] = $post;    
                     }
                     else {
-                        xp_subdomain::$api_json_data["add_media_exists"][] = $post_found;    
+                        xperia::$api_json_data["add_media_exists"][] = $post_found;    
                     }
                 }
 

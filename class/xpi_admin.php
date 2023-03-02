@@ -22,12 +22,12 @@ class xpi_admin_helper
 {
     static function read()
     {
-        // get option "xp_subdomain" from db
-        $option = get_option("xp_subdomain", []);
-        xp_subdomain::v("api/json/subdomains", $option);
+        // get option "xperia" from db
+        $option = get_option("xperia", []);
+        xperia::v("api/json/subdomains", $option);
         // feedback
         $feedback = "subdomains read";
-        xp_subdomain::v("api/json/feedback", $feedback);
+        xperia::v("api/json/feedback", $feedback);
     }
 
     static function update()
@@ -44,25 +44,25 @@ class xpi_admin_helper
             $subdomains = [];
         }
 
-        // update option "xp_subdomain" in db
-        update_option("xp_subdomain", $subdomains);
+        // update option "xperia" in db
+        update_option("xperia", $subdomains);
 
-        // get option "xp_subdomain" from db
-        // $option = get_option("xp_subdomain", []);
+        // get option "xperia" from db
+        // $option = get_option("xperia", []);
 
-        xp_subdomain::v("api/json/subdomains", $subdomains);
-        xp_subdomain::v("api/json/feedback", $feedback);
+        xperia::v("api/json/subdomains", $subdomains);
+        xperia::v("api/json/feedback", $feedback);
     }
 
     static function api_key()
     {
         // get request data api_key as json code
         $api_key = trim($_REQUEST["api_key"] ?? "");
-        // update option "xp_subdomain_api_key" in db
-        update_option("xp_subdomain_api_key", $api_key);
+        // update option "xperia_api_key" in db
+        update_option("xperia_api_key", $api_key);
         // feedback
         $feedback = "api_key updated";
-        xp_subdomain::v("api/json/feedback", $feedback);
+        xperia::v("api/json/feedback", $feedback);
     }
 
     static function request_json()
@@ -80,7 +80,7 @@ class xpi_admin_helper
             if (is_array($data)) {
                 $nb_parts = 0;
                 // store data for later usage
-                xp_subdomain::v("xpi_admin/request_json/data", $data);
+                xperia::v("xpi_admin/request_json/data", $data);
 
                 foreach ($data as $index => $part) {
                     // get request data subdomains as json code
@@ -99,8 +99,8 @@ class xpi_admin_helper
         } else {
             $feedback = "request_json is empty";
         }
-        xp_subdomain::$api_json_data["request_json"] = $data;
+        xperia::$api_json_data["request_json"] = $data;
 
-        xp_subdomain::v("api/json/feedback", $feedback);
+        xperia::v("api/json/feedback", $feedback);
     }
 }

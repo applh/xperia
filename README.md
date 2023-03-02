@@ -1,4 +1,4 @@
-# XP-SubDomain
+# XPeria
 
 WP Plugin to share subdomains to only one WP install
 
@@ -11,7 +11,7 @@ Once the plugin active, you can add subdomains and assign home pages to them.
 * You can add a api key to the plugin settings page
 * Then you can send POST requests to the following url: 
   * https://yourdomain.com/wp-admin/admin-ajax.php
-  * action = xpsubdomain
+  * action = xperia
 * There's a cli.php file that you can use to communicate with your WP websites
 
 #### API: mail
@@ -33,7 +33,7 @@ Once the plugin active, you can add subdomains and assign home pages to them.
             "message": "test"
         },
         {
-            "todo": "xpi_admin_helper::test"
+            "todo": "xp_task::test"
         }
     ]
 }
