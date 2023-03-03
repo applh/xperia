@@ -1,3 +1,5 @@
+console.log('HELLO');
+
 (function (blocks, element, data, blockEditor) {
     var el = element.createElement,
         registerBlockType = blocks.registerBlockType,

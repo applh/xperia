@@ -99,7 +99,8 @@ class xpi_admin_helper
         } else {
             $feedback = "request_json is empty";
         }
-        xperia::$api_json_data["request_json"] = $data;
+        
+        xp_action::$api_json_data["request_json"] = $data;
 
         xperia::v("api/json/feedback", $feedback);
     }

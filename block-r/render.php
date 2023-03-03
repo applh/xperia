@@ -1,3 +1,26 @@
+<div id="app">
+    <form>
+        <input v-model="mm">
+        <button>send</button>
+        <h3>{{ mm }}</h3>
+    </form>
+</div>
+
+<script type="module">
+
+console.log('hello');
+let vue = await import("/wp-content/plugins/xperia-main/media/vue.esm-browser.prod.js");
+let data = {
+mm: 'hello',
+}
+let app = vue.createApp({
+    data: () => data
+});
+// hack: need app to be available in created()
+app.mount('#app')
+
+</script>
+
 <pre>
 
 <?php

@@ -16,6 +16,6 @@ wp_register_script(
 register_block_type('xperia/block-d', array(
     'api_version' => 2,
     'editor_script' => 'xperia-block-d', // The script name we gave in the wp_register_script() call.
-    'render_callback' => 'xperia::block_d_render_callback',
+    'render_callback' => 'xp_action::block_d_render_callback',
     // 'supports' => array('color' => true, 'align' => true),
 ));

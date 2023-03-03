@@ -3,6 +3,10 @@
 // only for CLI
 if (php_sapi_name() != "cli") return;
 
+/**
+ * usage:
+ * php send cli.php my-site-vitrine/tasks-test.json
+ */
 class xp_cli
 {
     static $config = [];

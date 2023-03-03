@@ -56,7 +56,7 @@ class xp_task
                 rmdir("$tmp_dir");
             }
 
-            xperia::$api_json_data["mail"] = $part;
+            xp_action::$api_json_data["mail"] = $part;
         }
     }
 
@@ -76,14 +76,14 @@ class xp_task
                     if ($post_found) {
                         // get the ID
                         $value = $post_found->ID;
-                        xperia::$api_json_data["update_options"][] = $post_found;    
+                        xp_action::$api_json_data["update_options"][] = $post_found;    
 
                     }
                 }
             }
             update_option($option, $value);
         }
-        xperia::$api_json_data["options"] = $options;
+        xp_action::$api_json_data["options"] = $options;
     }
 
     static function delete_options ($part = [])
@@ -93,14 +93,14 @@ class xp_task
         foreach ($options as $option => $value) {
             delete_option($option);
         }
-        xperia::$api_json_data["delete_options"] = $options;
+        xp_action::$api_json_data["delete_options"] = $options;
     }
 
     static function test()
     {
         // feedback
         $feedback = "test / " . time();
-        xperia::$api_json_data["test"] = $feedback;
+        xp_action::$api_json_data["test"] = $feedback;
     }
 
     static function add_posts ($part = [])
@@ -132,7 +132,17 @@ class xp_task
                     }
                 }
                 $post_id = wp_insert_post($post);
-                
+
+                if (is_numeric($post_id) && (0 < intval($post_id))) {
+                    // HACK: force post_content
+                    global $wpdb;
+                    $wpdb->update(
+                        $wpdb->posts, 
+                        ["post_content" => $post_content], 
+                        ["ID" => $post_id]
+                    );
+                }
+
                 // load featured image from file
                 $featured_image ??= "";
                 if ($featured_image) {
@@ -148,10 +158,10 @@ class xp_task
 
                 }
 
-                xperia::$api_json_data["add_posts"][] = $post_id;    
+                xp_action::$api_json_data["add_posts"][] = $post_id;    
             }
             else {
-                xperia::$api_json_data["add_posts_exists"][] = $post_found;    
+                xp_action::$api_json_data["add_posts_exists"][] = $post_found;    
             }
         }, $posts);
 
@@ -173,11 +183,11 @@ class xp_task
             "post_status" => "any",
             "numberposts" => -1,
         ]);
-        xperia::$api_json_data["delete_posts_founds"][] = $founds;
+        xp_action::$api_json_data["delete_posts_founds"][] = $founds;
 
         foreach($founds as $found) {
             if (!$simulate) {
-                xperia::$api_json_data["delete_posts"][] = $found;
+                xp_action::$api_json_data["delete_posts"][] = $found;
                 wp_delete_post($found->ID, true);
             }
         }
@@ -205,7 +215,7 @@ class xp_task
                     // 'comment_status' => 'closed',
                     // 'ping_status' => 'closed',
                 ]);
-                xperia::$api_json_data["add_menus"][] = $menu_id;
+                xp_action::$api_json_data["add_menus"][] = $menu_id;
 
                 // add menu items
                 $menu_items ??= [];
@@ -234,7 +244,7 @@ class xp_task
                         html;
                         $menu_htmls[] = $menu_item_html;
                         
-                        xperia::$api_json_data["add_menu_items"][] = $page_id;
+                        xp_action::$api_json_data["add_menu_items"][] = $page_id;
                     }
                     
                 }
@@ -248,7 +258,7 @@ class xp_task
 
             }
             else {
-                xperia::$api_json_data["add_menus_exists"][] = $menu_found;    
+                xp_action::$api_json_data["add_menus_exists"][] = $menu_found;    
             }
         }
     }
@@ -280,10 +290,10 @@ class xp_task
                             'post_content' => $description,
                         ]);
                         $post = get_post($page_id, ARRAY_A);
-                        xperia::$api_json_data["add_media"][] = $post;    
+                        xp_action::$api_json_data["add_media"][] = $post;    
                     }
                     else {
-                        xperia::$api_json_data["add_media_exists"][] = $post_found;    
+                        xp_action::$api_json_data["add_media_exists"][] = $post_found;    
                     }
                 }
 
