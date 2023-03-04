@@ -20,6 +20,7 @@ class xp_action
         add_filter("template_include", "$class::page_template_include");
 
         // AJAX
+        // TODO: replace by endpoint to REST api ?
         // add new ajax action (not logged in) action="xperia"
         // warning: POST request only
         // curl -v -X POST -d "action=xperia" https://YOUSITE.COM/wp-admin/admin-ajax.php -o ajax.json

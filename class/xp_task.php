@@ -302,4 +302,17 @@ class xp_task
         }, $media);
 
     }
+
+    static function create_theme ($part = [])
+    {
+        extract($part);
+
+    }
+
+    static function create_plugin ($part = [])
+    {
+        extract($part);
+
+    }
+
 }

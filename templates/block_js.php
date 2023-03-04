@@ -6,8 +6,15 @@
 header("Content-Type: application/javascript");
 $block = $_GET['block'] ?? "";
 ?>
-(function (blocks, element, data, blockEditor) {
+(async function (blocks, element, data, blockEditor) {
     console.log('DYNAMIC BLOCK BY PHP');
+
+    // GET modules OK
+    let toto = await import('./module_js.php');
+    toto.default.test();
+    // POST fetch KO :-/
+    // await toto.default.test_fetch();
+
     var el = element.createElement,
         registerBlockType = blocks.registerBlockType,
         useSelect = data.useSelect,
@@ -19,11 +26,19 @@ $block = $_GET['block'] ?? "";
         icon: 'megaphone',
         category: 'widgets',
         edit: function () {
-            // method needed if you want to see block in the editor
-            let content;
+            // TODO: use wp.apiFetch
+            // https://developer.wordpress.org/block-editor/reference-guides/packages/packages-api-fetch/
+
+            /* method needed if you want to see block in the editor */
+            /* react can't activate script tags in gutenberg editor */
             let blockProps = useBlockProps();
-            content = 'testing...';
-            return el('div', blockProps, content);
+            let content = 'testing...';
+
+            // react element
+            let h1 = el('h1', null, 'title1');
+            let elem = el('div', blockProps, h1, content);
+
+            return elem;
         },
         supports: { color: { gradients: true, link: true }, align: true },
     });
