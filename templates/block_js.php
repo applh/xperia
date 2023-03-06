@@ -33,9 +33,16 @@ $block = $_GET['block'] ?? "";
             /* react can't activate script tags in gutenberg editor */
             let blockProps = useBlockProps();
             let content = 'testing...';
-
             // react element
             let h1 = el('h1', null, 'title1');
+            window.wp.apiFetch({ path: '/xperia/v1/api' })
+            .then(function (data) {
+                console.log(data);
+                console.log(blockProps);
+                // hack with block id
+                document.querySelector('#' + blockProps.id + ' h1').innerHTML = data?.date ?? 'error';
+            });
+
             let elem = el('div', blockProps, h1, content);
 
             return elem;

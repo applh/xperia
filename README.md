@@ -108,3 +108,33 @@ Once the plugin active, you can add subdomains and assign home pages to them.
   * FIXME: sanitize_post removes tags like `<script>`, etc...
 
 
+## WP TECHNOLOGIES 
+
+### Gutenberg
+
+* https://github.com/front/gutenberg-js
+* window.wp.apiFetch
+
+### REST API
+
+* https://developer.wordpress.org/rest-api/
+* GET and POST requests
+
+
+* `/wp-json/`
+* `/wp-json/wp/v2/posts`
+* `/wp-json/wp/v2/themes`
+
+* https://developer.wordpress.org/block-editor/reference-guides/packages/packages-api-fetch/
+  
+```js
+window.wp.apiFetch({
+    path: '/wp-json/wp/v2/posts',
+    method: 'POST',
+    data: {
+        title: 'My First Post',
+        content: 'Hello World',
+        status: 'publish',
+    },
+})
+```

@@ -28,9 +28,25 @@ class xp_action
         // also needed if user logged in
         add_action("wp_ajax_xperia", "$class::api_json");
 
+        // REST API
+        // https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
+        // https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/#example-registering-a-new-route
+        add_action('rest_api_init', "$class::rest_api_init");
+
         // add filter page_on_front
         add_filter('option_page_on_front', "$class::option_page_on_front");
     }
+
+    static function rest_api_init()
+    {
+        $class = __CLASS__;
+        // https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/#example-registering-a-new-route
+        register_rest_route('xperia/v1', '/api', array(
+            'methods' => ['GET', 'POST'],
+            'callback' => "$class::api_rest",
+        ));
+    }
+
 
     static function init()
     {
@@ -74,18 +90,17 @@ class xp_action
         register_block_type("$plugin_dir/block-a");
         register_block_type("$plugin_dir/block-i");
         register_block_type("$plugin_dir/block-r");
-        
+
         include("$plugin_dir/block-d/register.php");
 
         // register dynamic blocks
         $block_names = ["block-dynamic"];
-        foreach($block_names as $block_name) {
+        foreach ($block_names as $block_name) {
             static::register_block($block_name);
         }
-        
     }
 
-    static function register_block ($block_name)
+    static function register_block($block_name)
     {
         // dynamic block
         // https://developer.wordpress.org/block-editor/how-to-guides/block-tutorial/creating-dynamic-blocks/
@@ -102,7 +117,7 @@ class xp_action
             ),
             'version' => '0.1'
         );
-    
+
         $block_js_url = xperia::v("plugin_url") . "/templates/block_js.php?block=$block_name";
         header("xp-block-js-url: $block_js_url");
 
@@ -119,10 +134,9 @@ class xp_action
             'render_callback' => 'xp_action::block_render',
             // 'supports' => array('color' => true, 'align' => true),
         ));
-
     }
 
-    static function block_render ($attributes, $content)
+    static function block_render($attributes, $content)
     {
         $now = date("Y-m-d H:i:s");
         // debug
@@ -130,7 +144,7 @@ class xp_action
         $wrapper_attributes = get_block_wrapper_attributes();
 
         $html =
-        <<<html
+            <<<html
         <div $wrapper_attributes>
             <h1>Dynamic block</h1>
             <p>Current time: $now</p>
@@ -206,6 +220,37 @@ class xp_action
             xperia::v("api/json/feedback", "token expired");
         }
         return $res;
+    }
+
+    static function api_rest($request = null)
+    {
+        // return json
+        $infos = [];
+        // time
+        $infos['time'] = time();
+        // date
+        $infos['date'] = date("Y-m-d H:i:s");
+        // request
+        $infos['request'] = $_REQUEST;
+        // files
+        $infos['files'] = $_FILES;
+
+        // process the request
+        // if user is admin
+        if (static::check_api_key() || current_user_can("edit_plugins")) {
+            $c = "xpi_admin";
+            $m = "subdomains";
+            $callback = "$c::$m";
+            if (is_callable($callback)) {
+                $callback();
+            }
+        }
+        $infos['data'] = xperia::v("api/json/data") ?? static::$api_json_data ?? [];
+        $infos['subdomains'] = xperia::v("api/json/subdomains") ?? [];
+        $infos['feedback'] = xperia::v("api/json/feedback") ?? "";
+
+        // wp will convert into json
+        return $infos;
     }
 
     static function api_json()
@@ -326,5 +371,4 @@ class xp_action
 
         return $subfront ?? $value;
     }
-
 }
