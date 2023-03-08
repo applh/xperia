@@ -82,25 +82,6 @@
                     <span> pages</span>
                 </div>
                 <div uk-grid uk-sortable>
-                    <div class="uk-card uk-card-small uk-card-default uk-width-1-2@s uk-width-1-3@m uk-width-1-4@l uk-width-1-5@xl">
-                        <div class="uk-card-header">
-                            <div class="uk-grid-small uk-flex-middle" uk-grid>
-                                <div class="uk-width-auto">
-                                    <img class="uk-border-circle" width="40" height="40" src="images/avatar.jpg" alt="Avatar">
-                                </div>
-                                <div class="uk-width-expand">
-                                    <h3 class="uk-card-title uk-margin-remove-bottom">Title</h3>
-                                    <p class="uk-text-meta uk-margin-remove-top"><time datetime="2016-04-01T19:00">April 01, 2016</time></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="uk-card-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
-                        </div>
-                        <div class="uk-card-footer">
-                            <a href="#" class="uk-button uk-button-text">Read more</a>
-                        </div>
-                    </div>
 
                     <div v-for="n in (1 * max)" class="uk-card uk-card-small uk-card-default uk-width-1-2@s uk-width-1-3@m uk-width-1-4@l uk-width-1-5@xl">
                         <div class="uk-card-header">
@@ -116,9 +97,16 @@
                         </div>
                         <div class="uk-card-body">
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
+                            <a href="#offcanvas-usage" uk-toggle class="uk-button uk-button-text">Read more</a>
                         </div>
                         <div class="uk-card-footer">
-                            <a href="#offcanvas-usage" uk-toggle class="uk-button uk-button-text">Read more</a>
+                            <div>
+                                <div class="uk-button-group">
+                                    <button class="uk-button uk-button-small uk-button-secondary" uk-toggle="target: #modal-copy">copy</button>
+                                    <button class="uk-button uk-button-small uk-button-primary" uk-toggle="target: #modal-update">update</button>
+                                    <button class="uk-button uk-button-small uk-button-danger" uk-toggle="target: #modal-delete">delete</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -132,6 +120,39 @@
                 <a href="#offcanvas-usage" uk-toggle>Open</a>
             </div>
 
+        </div>
+
+        <div id="modal-delete" uk-modal>
+            <div class="uk-modal-dialog uk-modal-body">
+                <h2 class="uk-modal-title">Confirm Delete ?</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <p class="uk-text-right">
+                    <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                    <button class="uk-button uk-button-primary" type="button">Delete Item</button>
+                </p>
+            </div>
+        </div>
+
+        <div id="modal-update" uk-modal>
+            <div class="uk-modal-dialog uk-modal-body">
+                <h2 class="uk-modal-title">Update Item</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <p class="uk-text-right">
+                    <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                    <button class="uk-button uk-button-primary" type="button">Save Item</button>
+                </p>
+            </div>
+        </div>
+
+        <div id="modal-copy" uk-modal>
+            <div class="uk-modal-dialog uk-modal-body">
+                <h2 class="uk-modal-title">Add Item</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <p class="uk-text-right">
+                    <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                    <button class="uk-button uk-button-primary" type="button">Save Item</button>
+                </p>
+            </div>
         </div>
 
         <div id="offcanvas-usage" uk-offcanvas>
@@ -168,7 +189,7 @@
             template: '#appTemplate',
             data() {
                 return {
-                    max:100,
+                    max: 100,
                     message: 'Hello Vue!'
                 }
             }
