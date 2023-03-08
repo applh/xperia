@@ -108,6 +108,33 @@ Once the plugin active, you can add subdomains and assign home pages to them.
   * FIXME: sanitize_post removes tags like `<script>`, etc...
 
 
+
+## PHP LOCAL SERVER
+
+* https://www.php.net/manual/en/features.commandline.webserver.php
+
+```bash
+
+php -S localhost:8000
+
+php -S localhost:8000 -t media
+
+```
+
+## VUEJS
+
+* https://vuejs.org/guide/quick-start.html
+
+Version with compiler included
+
+* https://unpkg.com/vue@3/dist/vue.esm-browser.js
+* https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js
+
+
+## UIKIT 
+
+* https://getuikit.com/docs/introduction
+
 ## WP TECHNOLOGIES 
 
 ### Gutenberg
