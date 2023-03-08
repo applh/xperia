@@ -22,9 +22,9 @@
                     <div class="uk-navbar-center">
 
                         <ul class="uk-navbar-nav">
-                            <li class="uk-active"><a href="#">Dashboard</a></li>
+                            <li class="uk-active"><a href="#" @click.prevent="panel='dashboard'">Dashboard</a></li>
                             <li>
-                                <a href="#">Standard</a>
+                                <a href="#" @click.prevent="panel='pages'">Standard</a>
                                 <div class="uk-navbar-dropdown">
                                     <ul class="uk-nav uk-navbar-dropdown-nav">
                                         <li class="uk-active"><a href="#">Dashboard</a></li>
@@ -34,7 +34,7 @@
                                 </div>
                             </li>
                             <li>
-                                <a href="#">Custom</a>
+                                <a href="#" @click.prevent="panel='pages'">Custom</a>
                                 <div class="uk-navbar-dropdown">
                                     <ul class="uk-nav uk-navbar-dropdown-nav">
                                         <li class="uk-active"><a href="#">Dashboard</a></li>
@@ -44,7 +44,7 @@
                                 </div>
                             </li>
                             <li>
-                                <a href="#">Expert</a>
+                                <a href="#" @click.prevent="panel='pages'">Expert</a>
                                 <div class="uk-navbar-dropdown">
                                     <ul class="uk-nav uk-navbar-dropdown-nav">
                                         <li class="uk-active"><a href="#">Dashboard</a></li>
@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </li>
-                            <li><a href="#">Logout</a></li>
+                            <li><a href="#" @click.prevent="panel='login'">Logout</a></li>
                         </ul>
 
                     </div>
@@ -62,7 +62,51 @@
             </div>
         </nav>
 
-        <div uk-grid>
+        <div uk-grid v-if="panel=='login'">
+            <div class="uk-container uk-width-6-6">
+                <div class="uk-flex uk-flex-center">
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <h1>Login</h1>
+                    </div>
+                    <div class="uk-card uk-card-default uk-card-body uk-margin-left">
+                        <form>
+                            <fieldset class="uk-fieldset">
+
+                                <legend class="uk-legend">Login</legend>
+
+                                <div class="uk-margin">
+                                    <input class="uk-input" type="email" placeholder="email" aria-label="email">
+                                </div>
+                                <div class="uk-margin">
+                                    <input class="uk-input" type="password" placeholder="password" aria-label="password">
+                                </div>
+                                <div class="uk-margin">
+                                    <button class="uk-button uk-button-primary">Login</button>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div class="uk-card uk-card-default uk-card-body uk-margin-left">
+                        <h3>Create an account</h3>
+                        <button class="uk-button uk-button-small uk-button-primary" uk-toggle="target: #modal-register">Register</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div uk-grid v-if="panel=='dashboard'">
+            <div class="uk-container uk-width-6-6">
+                <div class="uk-flex uk-flex-center" uk-sortable>
+                    <div class="uk-card uk-card-default uk-card-body uk-width-1-2">
+                        <h1>Dashboard</h1>
+                    </div>
+                    <div class="uk-card uk-card-default uk-card-body uk-margin-left uk-width-1-2">Item 2</div>
+                    <div class="uk-card uk-card-default uk-card-body uk-margin-left uk-width-1-2">Item 3</div>
+                </div>
+            </div>
+        </div>
+
+        <div uk-grid v-else-if="panel=='pages'">
 
             <div class="uk-navbar-container uk-width-1-6">
                 <div class="uk-container">
@@ -115,9 +159,17 @@
             </div>
 
             <div class="uk-container uk-width-6-6">
-                <span>{{ message }}</span>
-                <button class="uk-button uk-button-default uk-margin-small-right" type="button" uk-toggle="target: #offcanvas-usage">Open</button>
-                <a href="#offcanvas-usage" uk-toggle>Open</a>
+                <div class="uk-flex uk-flex-center" uk-sortable>
+                    <div class="uk-card uk-card-default uk-card-body uk-width-1-2">
+                        <span>{{ message }}</span>
+                    </div>
+                    <div class="uk-card uk-card-default uk-card-body uk-margin-left uk-width-1-2">
+                        <button class="uk-button uk-button-default uk-margin-small-right" type="button" uk-toggle="target: #offcanvas-usage">Open</button>
+                    </div>
+                    <div class="uk-card uk-card-default uk-card-body uk-margin-left uk-width-1-2">
+                        <a href="#offcanvas-usage" uk-toggle>Open</a>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -151,6 +203,59 @@
                 <p class="uk-text-right">
                     <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
                     <button class="uk-button uk-button-primary" type="button">Save Item</button>
+                </p>
+            </div>
+        </div>
+
+        <div id="modal-register" uk-modal>
+            <div class="uk-modal-dialog uk-modal-body">
+                <h2 class="uk-modal-title">Create your account</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <form>
+                    <fieldset class="uk-fieldset">
+
+                        <legend class="uk-legend">Please enter your profile informations</legend>
+
+                        <div class="uk-margin">
+                            <input class="uk-input" type="email" placeholder="email" aria-label="email">
+                        </div>
+                        <div class="uk-margin">
+                            <input class="uk-input" type="password" placeholder="password" aria-label="password">
+                        </div>
+                        <div class="uk-margin">
+                            <input class="uk-input" type="text" placeholder="Input" aria-label="Input">
+                        </div>
+
+                        <div class="uk-margin">
+                            <select class="uk-select" aria-label="Select">
+                                <option>Option 01</option>
+                                <option>Option 02</option>
+                            </select>
+                        </div>
+
+                        <div class="uk-margin">
+                            <textarea class="uk-textarea" rows="5" placeholder="Textarea" aria-label="Textarea"></textarea>
+                        </div>
+
+                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                            <label><input class="uk-radio" type="radio" name="radio2" checked> A</label>
+                            <label><input class="uk-radio" type="radio" name="radio2"> B</label>
+                        </div>
+
+                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                            <label><input class="uk-checkbox" type="checkbox" checked> A</label>
+                            <label><input class="uk-checkbox" type="checkbox"> B</label>
+                        </div>
+
+                        <div class="uk-margin">
+                            <input class="uk-range" type="range" value="2" min="0" max="10" step="0.1" aria-label="Range">
+                        </div>
+
+                    </fieldset>
+                </form>
+                <p class="uk-text-right">
+                    <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                    <button class="uk-button uk-button-primary" type="button">Create your account</button>
                 </p>
             </div>
         </div>
@@ -189,6 +294,7 @@
             template: '#appTemplate',
             data() {
                 return {
+                    panel: 'login',
                     max: 100,
                     message: 'Hello Vue!'
                 }
