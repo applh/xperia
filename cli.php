@@ -53,6 +53,9 @@ class xp_cli
         }
     }
 
+    /**
+     * usage: php cli.php send my-site-vitrine/tasks-test.json
+     */
     static function cmd_send()
     {
 
@@ -134,16 +137,6 @@ class xp_cli
         return $build_tasks;
     }
 
-    static function cmd_md5()
-    {
-        $random = md5(password_hash(uniqid(), PASSWORD_DEFAULT));
-        echo
-        <<<txt
-        $random
-
-        txt;
-    }
-
     // autoloader
     static function autoload($class)
     {
@@ -156,6 +149,31 @@ class xp_cli
         }
     }
     
+    /**
+     * usage: php cli.php md5
+     */
+    static function cmd_md5()
+    {
+        $random = md5(password_hash(uniqid(), PASSWORD_DEFAULT));
+        echo
+        <<<txt
+        $random
+
+        txt;
+    }
+
+    
+    /**
+     * usage: php cli.php server 9876
+     */
+    static function cmd_server ()
+    {
+        // launch PHP local server
+        $port = static::$args[2] ?? 9876;
+        $cmd = "php -S localhost:$port -t my-app";
+        echo $cmd;
+        passthru($cmd);
+    }
 }
 
 xp_cli::run();
