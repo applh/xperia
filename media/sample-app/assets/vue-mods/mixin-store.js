@@ -1,6 +1,8 @@
 let vue = await import('../vue/vue.esm-browser.prod.js');
 
 let store = vue.reactive({
+    max: 100,
+    user_note: '',
     login_email: '',
     login_user: '',
     panel: 'login',
