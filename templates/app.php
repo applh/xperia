@@ -2,63 +2,29 @@
 <html>
 
 <head>
-    <title>Title</title>
+    <title>Xperia App</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="assets/uikit/css/uikit.min.css" />
+    <!--
     <link rel="stylesheet" href="assets/leaflet/leaflet.css" />
-
     <script src="assets/leaflet/leaflet.js"></script>
+    -->
+
     <script src="assets/uikit/js/uikit.min.js"></script>
     <script src="assets/uikit/js/uikit-icons.min.js"></script>
 
     <style>
-        #map {
-            width:100%;
-            height: 180px;
+        .map {
+            width: 100%;
+            height: 50vmin;
+        }
+        .leaflet-control-attribution {
+            display: none;
         }
     </style>
     <script>
-        let leaflet_init = function() {
-            const map = L.map('map').setView([51.505, -0.09], 13);
 
-            const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
-
-            const marker = L.marker([51.5, -0.09]).addTo(map)
-                .bindPopup('<b>Hello world!</b><br />I am a popup.').openPopup();
-
-            const circle = L.circle([51.508, -0.11], {
-                color: 'red',
-                fillColor: '#f03',
-                fillOpacity: 0.5,
-                radius: 500
-            }).addTo(map).bindPopup('I am a circle.');
-
-            const polygon = L.polygon([
-                [51.509, -0.08],
-                [51.503, -0.06],
-                [51.51, -0.047]
-            ]).addTo(map).bindPopup('I am a polygon.');
-
-
-            const popup = L.popup()
-                .setLatLng([51.513, -0.09])
-                .setContent('I am a standalone popup.')
-                .openOn(map);
-
-            function onMapClick(e) {
-                popup
-                    .setLatLng(e.latlng)
-                    .setContent(`You clicked the map at ${e.latlng.toString()}`)
-                    .openOn(map);
-            }
-
-            map.on('click', onMapClick);
-
-        }
     </script>
 </head>
 
@@ -66,7 +32,7 @@
 
     <div id="app"></div>
 
-    <template id="appTemplate">
+    <template id="appTemplate" data-compos="test map">
         <nav class="uk-navbar-container">
             <div class="uk-container">
                 <div uk-navbar>
@@ -143,7 +109,9 @@
                     </div>
                 </div>
             </div>
-            <map-box />
+            <div class="uk-width-6-6">
+                <o-map />
+            </div>
         </div>
 
         <div uk-grid v-if="panel=='dashboard'">
@@ -286,6 +254,7 @@
                 <li><a href="#">Profile</a></li>
                 <li><a href="#offcanvas-usage" uk-toggle>Options</a></li>
             </ul>
+            <o-test />
         </div>
 
     </template>
@@ -368,40 +337,30 @@
         </div>
     </template>
 
-    <template id="mapBox">
-        <div id="map"></div>
-    </template>
-
     <script type="module">
-        import {
-            createApp
-        } from './assets/vue/vue.esm-browser.prod.js'
 
-        let app = createApp({
+        let vue = await import('./assets/vue/vue.esm-browser.prod.js');
+        let mixin_store = await import('./assets/vue-mods/mixin-store.js');
+        let mixins = [ mixin_store.default ];
+
+        let app = vue.createApp({
             template: '#appTemplate',
+            mixins,
             data() {
                 return {
-                    login_email: '',
-                    login_user: '',
-                    panel: 'login'
                 }
             },
-            mounted () {
-            }
+            async created() {
+
+                this.load_components(app);
+            },
+            mounted() {}
         })
 
-        app.component('mapBox', {
-            template: '#mapBox',
-            data() {
-                return {}
-            },
-            mounted () {
-                leaflet_init();
-            }
-        })
 
         app.component('MenuSidebar', {
             template: '#sidebarTemplate',
+            mixins,
             data() {
                 return {}
             }
@@ -409,16 +368,17 @@
 
         app.component('DashboardMain', {
             template: '#DashboardMain',
+            mixins,
             data() {
                 return {}
             }
         })
         app.component('PagesMain', {
             template: '#PagesMain',
+            mixins,
             data() {
                 return {
                     max: 100,
-                    message: 'Hello Vue!'
                 }
             }
         })
