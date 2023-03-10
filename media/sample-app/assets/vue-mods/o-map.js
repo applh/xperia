@@ -26,17 +26,17 @@ export default {
     methods: {
         leaflet_init: function() {
             console.log('leaflet_init')
-            const map = L.map(this.$refs.map).setView([51.505, -0.09], 13);
+            const map = L.map(this.$refs.map).setView([48.2872, 2.842929], 8);
 
             const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: ''
             }).addTo(map);
 
-            const marker = L.marker([51.5, -0.09]).addTo(map)
+            const marker = L.marker([48.2872, 2.842929]).addTo(map)
                 .bindPopup('<b>Hello world!</b><br />I am a popup.').openPopup();
 
-            const circle = L.circle([51.508, -0.11], {
+            const circle = L.circle([48.2872, 2.842929], {
                 color: 'red',
                 fillColor: '#f03',
                 fillOpacity: 0.5,
@@ -44,14 +44,14 @@ export default {
             }).addTo(map).bindPopup('I am a circle.');
 
             const polygon = L.polygon([
-                [51.509, -0.08],
-                [51.503, -0.06],
-                [51.51, -0.047]
+                [48.27, 2.84],
+                [48.30, 2.85],
+                [48.28, 2.86],
             ]).addTo(map).bindPopup('I am a polygon.');
 
 
             const popup = L.popup()
-                .setLatLng([51.513, -0.09])
+                .setLatLng([48.2872, 2.842929])
                 .setContent('I am a standalone popup.')
                 .openOn(map);
 

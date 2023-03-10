@@ -5,10 +5,13 @@ let mixins = [ mixin_store.default ];
 
 let template = `
 <div class="compo">
-    <div class="uk-flex-center" uk-grid uk-sortable>
+    <div :class="class_v" ref="grid">
         <div class="uk-card uk-card-default uk-card-body uk-width-1-2">
             <h1>Dashboard</h1>
             <em>Welcome {{ login_user }}</em>
+            <p>Sortable:
+                <input type="checkbox" v-model="option_sortable" @click="act_toggle_sortable()" />
+            </p>
         </div>
         <div class="uk-width-1-2">
             <o-test />
@@ -23,11 +26,53 @@ let template = `
                 <a href="#offcanvas-usage" uk-toggle class="uk-button uk-button-text">Read more</a>
             </div>
         </div>
+        <div class="uk-width-1-2@m">
+            <o-chart chart_type='doughnut' />
+        </div>
+        <div class="uk-width-1-2@m">
+            <o-map />
+        </div>
+        <div class="uk-width-1-4@m">
+            <o-chart chart_type='bar' />
+        </div>
+        <div class="uk-width-1-4@m">
+            <o-chart chart_type='radar' />
+        </div>
+        <div class="uk-width-1-4@m">
+            <o-chart chart_type='line' />
+        </div>
+        <div class="uk-width-1-4@m">
+            <o-chart chart_type='scatter' />
+        </div>
+
     </div>
 </div>
 `
 
+let data_compo = {
+    option_sortable: false,
+    class_v:{
+        'uk-flex-center' : true,
+        'uk-grid' : true,
+    },
+}
+
 export default {
     template,
     mixins,
+    data: () => data_compo,
+    methods:{
+        act_toggle_sortable(){
+            this.option_sortable = !this.option_sortable;
+            if (this.option_sortable) {
+                // add attribute uk-sortable
+                this.$refs.grid.setAttribute('uk-sortable', '');
+            }
+            else {
+                // remove attribute uk-sortable
+                this.$refs.grid.removeAttribute('uk-sortable');
+            }
+            // console.log(this.$refs.grid);
+        }
+    }
 }

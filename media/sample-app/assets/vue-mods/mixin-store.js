@@ -34,6 +34,7 @@ export default {
         async load_js_order(urls=[], index = 0, cb=null) {
             if (index >= urls.length) {
                 console.log('load_js callback', cb)
+                // FIXME: should addEventListener('load', cb)
                 if (cb) cb();
                 return;
             }

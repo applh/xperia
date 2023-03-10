@@ -99,18 +99,6 @@ let template = `
         <div class="uk-width-5-6@m">
             <o-dashboard />
         </div>
-        <div class="uk-width-1-2@m">
-            <o-chart />
-        </div>
-        <div class="uk-width-1-2@m">
-            <o-map />
-        </div>
-        <div class="uk-width-1-2@m">
-            <o-chart chart_type='doughnut' />
-        </div>
-        <div class="uk-width-1-2@m">
-            <o-chart chart_type='line' />
-        </div>
     </div>
 
     <div uk-grid v-else-if="panel=='pages'">
