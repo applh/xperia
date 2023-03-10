@@ -5,6 +5,7 @@
     <title>Xperia App</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="assets/images/avatar.jpg" type="image/x-icon" />
     <link rel="stylesheet" href="assets/uikit/css/uikit.min.css" />
 
     <script src="assets/uikit/js/uikit.min.js"></script>
@@ -19,6 +20,10 @@
         .leaflet-control-attribution {
             display: none;
         }
+        .compo > h3 {
+            text-align: center;
+            padding-top:1rem;
+        }
     </style>
     <script>
 
@@ -26,10 +31,9 @@
 </head>
 
 <body>
-
     <div id="app"></div>
 
-    <template id="appTemplate" data-compos="app-md test map pages dashboard header sidebar">
+    <template id="appTemplate" data-compos="app-md test map chart pages dashboard header sidebar">
         <o-app-md />
     </template>
 

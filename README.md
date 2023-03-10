@@ -112,6 +112,9 @@ Once the plugin active, you can add subdomains and assign home pages to them.
 ## PHP LOCAL SERVER
 
 * https://www.php.net/manual/en/features.commandline.webserver.php
+* Subdomains can be used with localhost
+  * app.localhost:9876
+  * news.localhost:7654
 
 ```bash
 
