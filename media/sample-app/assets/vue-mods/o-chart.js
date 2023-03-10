@@ -2,6 +2,7 @@
 let mixin_store = await import('./mixin-store.js');
 let mixins = [ mixin_store.default ];
 
+// https://www.chartjs.org/docs/latest/developers/updates.html
 
 // KO
 // https://www.chartjs.org/docs/latest/getting-started/integration.html
@@ -13,6 +14,9 @@ let template = `
     <canvas id="myChart" ref="myChart"></canvas>
 </div>
 `
+
+
+
 
 export default {
     template,
@@ -37,7 +41,7 @@ export default {
     },
     methods: {
         compo_init: function() {
-            
+
             // FIXME: hack to wait for Chart to be defined
             // if Chart is not defined, it means that the script is not loaded
             // then we wait 100ms and try again
@@ -48,16 +52,9 @@ export default {
 
             const ctx = this.$refs.myChart; // document.getElementById('myChart');
 
-            new Chart(ctx, {
+            let compo_chart = new Chart(ctx, {
                 type: this.chart_type,
-                data: {
-                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                    datasets: [{
-                        label: '# of Votes',
-                        data: [12, 19, 3, 5, 2, 3],
-                        borderWidth: 1
-                    }]
-                },
+                data: mixin_store.chart_data, // this.chart_data,
                 options: {
                     scales: {
                         y: {
@@ -66,6 +63,8 @@ export default {
                     }
                 }
             });
+            // keep the chart in the store
+            mixin_store.charts.push(compo_chart);
         }
     }
 }

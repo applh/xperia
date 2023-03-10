@@ -1,6 +1,16 @@
 let vue = await import('../vue/vue.esm-browser.prod.js');
 
 let store = vue.reactive({
+    input_label: 'label',
+    input_data: 10,
+    chart_data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            borderWidth: 1
+        }]
+    },
     max: 100,
     user_note: '',
     login_email: '',
@@ -9,6 +19,19 @@ let store = vue.reactive({
     count: 0,
     message: 'Hello Vue!'
 })
+
+// keep the charts out of vue
+export let charts = [];
+// chartjs share the data with each chart
+// must be updated manually or by repainting the chart
+export let chart_data = {
+    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        borderWidth: 1
+    }]
+}
 
 export default {
     data:() => store,
