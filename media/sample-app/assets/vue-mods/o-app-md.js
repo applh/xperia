@@ -38,9 +38,6 @@ let template = `
             </div>
         </div>
     </div>
-    <div class="uk-width-6-6">
-        <o-map />
-    </div>
     <div id="modal-register" uk-modal>
         <div class="uk-modal-dialog uk-modal-body">
             <h2 class="uk-modal-title">Create your account</h2>
@@ -96,12 +93,24 @@ let template = `
     </div>
 
     <div uk-grid v-if="panel=='dashboard'">
-    <div class="uk-navbar-container uk-width-1-6">
-        <o-sidebar />
-    </div>
-    <div class="uk-width-5-6">
-        <o-dashboard />
-    </div>
+        <div class="uk-navbar-container uk-width-1-6@m">
+            <o-sidebar />
+        </div>
+        <div class="uk-width-5-6@m">
+            <o-dashboard />
+        </div>
+        <div class="uk-width-1-2@m">
+            <o-chart />
+        </div>
+        <div class="uk-width-1-2@m">
+            <o-map />
+        </div>
+        <div class="uk-width-1-2@m">
+            <o-chart chart_type='doughnut' />
+        </div>
+        <div class="uk-width-1-2@m">
+            <o-chart chart_type='line' />
+        </div>
     </div>
 
     <div uk-grid v-else-if="panel=='pages'">

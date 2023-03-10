@@ -14,7 +14,6 @@ let template = `
             <li><a href="#">Profile</a></li>
             <li><a href="#offcanvas-usage" uk-toggle>Options</a></li>
         </ul>
-        <o-test />
     </div>
 </div>
 `

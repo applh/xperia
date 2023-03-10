@@ -5,8 +5,8 @@ let mixins = [ mixin_store.default ];
 
 let template = `
 <div class="compo">
-    <hr>
-    <textarea v-model="user_note" class="uk-textarea"></textarea>
+    <h3>Notes</h3>
+    <textarea v-model="user_note" class="uk-textarea" rows="10"></textarea>
     <button @click="count++">{{ count }}</button>
 </div>
 `

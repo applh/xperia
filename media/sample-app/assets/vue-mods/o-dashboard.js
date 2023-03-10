@@ -6,9 +6,12 @@ let mixins = [ mixin_store.default ];
 let template = `
 <div class="compo">
     <div class="uk-flex-center" uk-grid uk-sortable>
-        <div class="uk-card uk-card-default uk-card-body uk-width-6-6">
+        <div class="uk-card uk-card-default uk-card-body uk-width-1-2">
             <h1>Dashboard</h1>
             <em>Welcome {{ login_user }}</em>
+        </div>
+        <div class="uk-width-1-2">
+            <o-test />
         </div>
         <div v-for="p in 16" class="uk-card uk-card-default uk-width-1-2@s uk-width-1-3@m uk-width-1-4@l">
             <div class="uk-grid-small uk-flex-middle" uk-grid>
