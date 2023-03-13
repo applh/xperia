@@ -28,6 +28,12 @@ let template = `
             <o-map />
         </div>
         <div class="uk-width-1-2">
+            <o-scene />
+        </div>
+        <div class="uk-width-1-2">
+            <o-test />
+        </div>
+        <div class="uk-width-1-2">
             <o-test />
         </div>
         <div v-for="p in 16" class="uk-card uk-card-default uk-width-1-2@s uk-width-1-3@m uk-width-1-4@l">

@@ -24,16 +24,17 @@
             text-align: center;
             padding-top:1rem;
         }
+        .render {
+            width: 100%;
+            height: 50vmin;
+        }
     </style>
-    <script>
-
-    </script>
 </head>
 
 <body>
     <div id="app"></div>
 
-    <template id="appTemplate" data-compos="app-md test map chart pages dashboard header sidebar">
+    <template id="appTemplate" data-compos="app-md test map chart pages dashboard header sidebar scene">
         <o-app-md />
     </template>
 
