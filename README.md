@@ -136,14 +136,44 @@ Version with compiler included
 
 ## UIKIT 
 
+* Web ui framework
 * https://getuikit.com/docs/introduction
 
+## BABYLONJS
+
+* 4D engine
+* https://doc.babylonjs.com/setup/starterHTML
+
+## LEAFLETJS
+
+* Map framework
+* https://leafletjs.com/examples/quick-start/
+
+## P5JS
+
+* Multimedia Sketch framework
+* https://p5js.org/get-started/
+  
 ## WP TECHNOLOGIES 
 
 ### Gutenberg
 
 * https://github.com/front/gutenberg-js
 * window.wp.apiFetch
+
+#### React vs Vue
+
+If you want to build a framework with PHP as server language, then plugins must have APIs to customize the frontend.
+* PHP API
+* JS API
+
+But if you don't want to add Nodejs, then typescript and JSX are bad choices.
+* Gutenberg code is built with React, JSX.
+* But Gutenberg provides also a JS API to customize the frontend.
+* So basically, Gutenberg is rebuilding... VueJS with... React and JSX ?! 😱
+
+* VueJS is a better choice as there's an ESM version including the compiler.
+* It's easier for plugin developers to customize the frontend. 😎
 
 ### REST API
 

@@ -29,12 +29,13 @@
             height: 50vmin;
         }
     </style>
+
 </head>
 
 <body>
     <div id="app"></div>
 
-    <template id="appTemplate" data-compos="app-md test map chart pages dashboard header sidebar scene">
+    <template id="appTemplate" data-compos="app-md test map chart pages dashboard header sidebar scene sketch">
         <o-app-md />
     </template>
 

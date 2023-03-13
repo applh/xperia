@@ -6,10 +6,8 @@ let mixins = [ mixin_store.default ];
 let template = `
 <div class="compo">
     <nav class="uk-navbar-container">
-    <o-header />
+        <o-header />
     </nav>
-
-
     <div uk-grid v-if="panel=='login'">
     <div class="uk-container uk-width-6-6">
         <div class="uk-flex uk-flex-center">
