@@ -44,6 +44,7 @@ class xp_action
         register_rest_route('xperia/v1', '/api', array(
             'methods' => ['GET', 'POST'],
             'callback' => "$class::api_rest",
+            "permission_callback" => function () { return true; },
         ));
     }
 

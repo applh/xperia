@@ -6,8 +6,7 @@
     "category": "layout",
     "icon": "universal-access-alt",
     "editorScript": [
-        "file:./block.js",
-        "file:./view.js"
+        "file:./block.js"
     ],
     "script_handles": [
         "file:./view.js"
@@ -16,7 +15,6 @@
         "file:./view.js"
     ],
     "viewScript": [
-        "file:./view.js"
     ],
     "render": "file:./render.php",
     "attributes": {

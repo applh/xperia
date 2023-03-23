@@ -1,0 +1,10 @@
+{
+    "phpVersion": "8.2",
+    "core": "./www",
+    "mappings": {
+        "wp-admin/includes/admin.php": "./src/wp-admin/includes/admin.php",
+        "wp-settings.php": "./src/wp-settings.php",
+        "wp-content": "./src/wp-content",
+        "wp-content/uploads": "./src/wp-content/uploads"
+    }
+}

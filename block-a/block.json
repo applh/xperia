@@ -5,6 +5,6 @@
     "category": "layout",
     "icon": "universal-access-alt",
     "editorScript": "file:./block.js",
-    "script": "file:./view.js",
-    "viewScript": "file:./view.js"
+    "script": "",
+    "viewScript": ""
 }
